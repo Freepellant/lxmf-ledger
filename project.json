@@ -1,0 +1,20 @@
+{
+  "overview": "A learning/demo payment ledger for Reticulum/LXMF mesh network users with balance tracking, HTLC (Hash Time Locked Contract) management, and a React dashboard.",
+  "features": [
+    "Check LXMF hash balance with auto-refresh",
+    "Test faucet to deposit demo funds",
+    "Create HTLCs with sender, receiver, amount, payment hash, and expiry",
+    "Release HTLCs by entering the correct preimage",
+    "Refund expired HTLCs automatically",
+    "Persistent event log of all ledger operations"
+  ],
+  "category": "productivity",
+  "tags": [
+    "ledger",
+    "htlc",
+    "mesh-network",
+    "demo",
+    "icp"
+  ],
+  "last_updated": "2026-06-20T03:32:28.121Z"
+}

@@ -1,0 +1,42 @@
+type Timestamp = nat;
+type LxmfHash = text;
+type HtlcStatus = 
+ variant {
+   Locked;
+   Refunded;
+   Released;
+ };
+type HtlcRecord = 
+ record {
+   amount: nat;
+   expiry: Timestamp;
+   id: HtlcId;
+   paymentHash: text;
+   receiverLxmfHash: LxmfHash;
+   senderLxmfHash: LxmfHash;
+   status: HtlcStatus;
+ };
+type HtlcId = text;
+type EventLogEntry = text;
+service : {
+  __balances: (ko: opt LxmfHash, count: opt nat) ->
+   (vec record {
+          LxmfHash;
+          nat;
+        }) query;
+  __eventLog: (io: opt nat, count: opt nat) -> (vec EventLogEntry) query;
+  __htlcs: (ko: opt HtlcId, count: opt nat) ->
+   (vec record {
+          HtlcId;
+          HtlcRecord;
+        }) query;
+  __nextHtlcId: () -> (reserved) query;
+  deposit: (lxmfHash: LxmfHash, amount: nat) -> ();
+  getBalance: (lxmfHash: LxmfHash) -> (nat) query;
+  getHTLC: (htlcId: HtlcId) -> (opt HtlcRecord) query;
+  listHTLCsForAddress: (lxmfHash: LxmfHash) -> (vec HtlcRecord) query;
+  lockHTLC: (senderLxmfHash: LxmfHash, receiverLxmfHash: LxmfHash, amount:
+   nat, paymentHash: text, expirySeconds: nat) -> (HtlcId);
+  refundHTLC: (htlcId: HtlcId) -> ();
+  releaseHTLC: (htlcId: HtlcId, preimage: text) -> ();
+}

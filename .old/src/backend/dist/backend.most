@@ -1,0 +1,77 @@
+// Version: 4.0.0
+type Data__80296667<K, V> =
+  {var count : Nat__1040412405; kvs : [var ?(K, V)]};
+type EventLogEntry__858109921 = Text;
+type HtlcId__212554912 = Text;
+type HtlcRecord__319904597 =
+  {
+    amount : Nat;
+    expiry : Timestamp__301639476;
+    id : HtlcId__212554912;
+    paymentHash : Text;
+    receiverLxmfHash : LxmfHash__955150002;
+    senderLxmfHash : LxmfHash__955150002;
+    status : HtlcStatus__433926186
+  };
+type HtlcStatus__433926186 = {#Locked; #Refunded; #Released};
+type Internal__41346355<K, V> =
+  {children : [var ?Node__1000929467<K, V>]; data : Data__80296667<K, V>};
+type Leaf__712614010<K, V> = {data : Data__80296667<K, V>};
+type List__529703492<T> =
+  {
+    var blockIndex : Nat__1040412405;
+    var blocks : [var [var ?T]];
+    var elementIndex : Nat__1040412405
+  };
+type List__560604548<T> = List__529703492<T>;
+type LxmfHash__955150002 = Text;
+type Map__222667396<K, V> = Map__912772452<K, V>;
+type Map__709709801<K, V> =
+  {var root : Node__1000929467<K, V>; var size : Nat__1040412405};
+type Map__912772452<K, V> = Map__709709801<K, V>;
+type Nat__1040412405 = Nat__920180692;
+type Nat__920180692 = Nat;
+type NewActor__932940748 =
+  {
+    balances : Map__222667396<Text, Nat>;
+    eventLog : List__560604548<Text>;
+    htlcs :
+      Map__222667396<Text,
+                      {
+                        amount : Nat;
+                        expiry : Nat;
+                        id : Text;
+                        paymentHash : Text;
+                        receiverLxmfHash : Text;
+                        senderLxmfHash : Text;
+                        status : {#Locked; #Refunded; #Released}
+                      }>;
+    nextHtlcId : {var value : Nat}
+  };
+type Node__1000929467<K, V> =
+  {#internal : Internal__41346355<K, V>; #leaf : Leaf__712614010<K, V>};
+type OldActor__624686387 = {};
+type Timestamp__301639476 = Nat;
+{
+  "20260620_000000_InitPayments" :
+    (_old : OldActor__624686387) -> NewActor__932940748
+}
+actor  {
+  stable balances :
+    {
+      var root : Node__1000929467<LxmfHash__955150002, Nat>;
+      var size : Nat__1040412405
+    };
+  stable eventLog :
+    {
+      var blockIndex : Nat__1040412405;
+      var blocks : [var [var ?EventLogEntry__858109921]];
+      var elementIndex : Nat__1040412405
+    };
+  stable htlcs :
+    {
+      var root : Node__1000929467<HtlcId__212554912, HtlcRecord__319904597>;
+      var size : Nat__1040412405
+    };
+  stable nextHtlcId : {var value : Nat}
+};
