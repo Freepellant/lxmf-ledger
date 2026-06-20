@@ -108,61 +108,64 @@ export enum HtlcStatus {
     Locked = "Locked"
 }
 export interface backendInterface {
-    __balances(ko: LxmfHash | null, count: bigint | null): Promise<Array<[LxmfHash, bigint]>>;
+    __balances(): Promise<any>;
     __eventLog(io: bigint | null, count: bigint | null): Promise<Array<EventLogEntry>>;
-    __htlcs(ko: HtlcId | null, count: bigint | null): Promise<Array<[HtlcId, HtlcRecord]>>;
+    __htlcs(): Promise<any>;
     __nextHtlcId(): Promise<any>;
+    __publicKeys(): Promise<any>;
     deposit(lxmfHash: LxmfHash, amount: bigint): Promise<void>;
     getBalance(lxmfHash: LxmfHash): Promise<bigint>;
     getHTLC(htlcId: HtlcId): Promise<HtlcRecord | null>;
+    getRegisteredPublicKey(lxmfHash: LxmfHash): Promise<string | null>;
     listHTLCsForAddress(lxmfHash: LxmfHash): Promise<Array<HtlcRecord>>;
-    lockHTLC(senderLxmfHash: LxmfHash, receiverLxmfHash: LxmfHash, amount: bigint, paymentHash: string, expirySeconds: bigint): Promise<HtlcId>;
+    lockHTLC(senderLxmfHash: LxmfHash, receiverLxmfHash: LxmfHash, amount: bigint, paymentHash: string, expirySeconds: bigint, signature: string): Promise<HtlcId>;
     refundHTLC(htlcId: HtlcId): Promise<void>;
+    registerPublicKey(lxmfHash: LxmfHash, publicKeyHex: string): Promise<void>;
     releaseHTLC(htlcId: HtlcId, preimage: string): Promise<void>;
 }
 import type { HtlcId as _HtlcId, HtlcRecord as _HtlcRecord, HtlcStatus as _HtlcStatus, LxmfHash as _LxmfHash, Timestamp as _Timestamp } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
-    async __balances(arg0: LxmfHash | null, arg1: bigint | null): Promise<Array<[LxmfHash, bigint]>> {
+    async __balances(): Promise<any> {
         if (this.processError) {
             try {
-                const result = await this.actor.__balances(to_candid_opt_n1(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n2(this._uploadFile, this._downloadFile, arg1));
+                const result = await this.actor.__balances();
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.__balances(to_candid_opt_n1(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n2(this._uploadFile, this._downloadFile, arg1));
+            const result = await this.actor.__balances();
             return result;
         }
     }
     async __eventLog(arg0: bigint | null, arg1: bigint | null): Promise<Array<EventLogEntry>> {
         if (this.processError) {
             try {
-                const result = await this.actor.__eventLog(to_candid_opt_n2(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n2(this._uploadFile, this._downloadFile, arg1));
+                const result = await this.actor.__eventLog(to_candid_opt_n1(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n1(this._uploadFile, this._downloadFile, arg1));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.__eventLog(to_candid_opt_n2(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n2(this._uploadFile, this._downloadFile, arg1));
+            const result = await this.actor.__eventLog(to_candid_opt_n1(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n1(this._uploadFile, this._downloadFile, arg1));
             return result;
         }
     }
-    async __htlcs(arg0: HtlcId | null, arg1: bigint | null): Promise<Array<[HtlcId, HtlcRecord]>> {
+    async __htlcs(): Promise<any> {
         if (this.processError) {
             try {
-                const result = await this.actor.__htlcs(to_candid_opt_n3(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n2(this._uploadFile, this._downloadFile, arg1));
-                return from_candid_vec_n4(this._uploadFile, this._downloadFile, result);
+                const result = await this.actor.__htlcs();
+                return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.__htlcs(to_candid_opt_n3(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n2(this._uploadFile, this._downloadFile, arg1));
-            return from_candid_vec_n4(this._uploadFile, this._downloadFile, result);
+            const result = await this.actor.__htlcs();
+            return result;
         }
     }
     async __nextHtlcId(): Promise<any> {
@@ -176,6 +179,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.__nextHtlcId();
+            return result;
+        }
+    }
+    async __publicKeys(): Promise<any> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.__publicKeys();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.__publicKeys();
             return result;
         }
     }
@@ -211,41 +228,55 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getHTLC(arg0);
-                return from_candid_opt_n10(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n2(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getHTLC(arg0);
-            return from_candid_opt_n10(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n2(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getRegisteredPublicKey(arg0: LxmfHash): Promise<string | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getRegisteredPublicKey(arg0);
+                return from_candid_opt_n7(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getRegisteredPublicKey(arg0);
+            return from_candid_opt_n7(this._uploadFile, this._downloadFile, result);
         }
     }
     async listHTLCsForAddress(arg0: LxmfHash): Promise<Array<HtlcRecord>> {
         if (this.processError) {
             try {
                 const result = await this.actor.listHTLCsForAddress(arg0);
-                return from_candid_vec_n11(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n8(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.listHTLCsForAddress(arg0);
-            return from_candid_vec_n11(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n8(this._uploadFile, this._downloadFile, result);
         }
     }
-    async lockHTLC(arg0: LxmfHash, arg1: LxmfHash, arg2: bigint, arg3: string, arg4: bigint): Promise<HtlcId> {
+    async lockHTLC(arg0: LxmfHash, arg1: LxmfHash, arg2: bigint, arg3: string, arg4: bigint, arg5: string): Promise<HtlcId> {
         if (this.processError) {
             try {
-                const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4);
+                const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4);
+            const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5);
             return result;
         }
     }
@@ -260,6 +291,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.refundHTLC(arg0);
+            return result;
+        }
+    }
+    async registerPublicKey(arg0: LxmfHash, arg1: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.registerPublicKey(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.registerPublicKey(arg0, arg1);
             return result;
         }
     }
@@ -278,16 +323,19 @@ export class Backend implements backendInterface {
         }
     }
 }
-function from_candid_HtlcRecord_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _HtlcRecord): HtlcRecord {
-    return from_candid_record_n7(_uploadFile, _downloadFile, value);
+function from_candid_HtlcRecord_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _HtlcRecord): HtlcRecord {
+    return from_candid_record_n4(_uploadFile, _downloadFile, value);
 }
-function from_candid_HtlcStatus_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _HtlcStatus): HtlcStatus {
-    return from_candid_variant_n9(_uploadFile, _downloadFile, value);
+function from_candid_HtlcStatus_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _HtlcStatus): HtlcStatus {
+    return from_candid_variant_n6(_uploadFile, _downloadFile, value);
 }
-function from_candid_opt_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_HtlcRecord]): HtlcRecord | null {
-    return value.length === 0 ? null : from_candid_HtlcRecord_n6(_uploadFile, _downloadFile, value[0]);
+function from_candid_opt_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_HtlcRecord]): HtlcRecord | null {
+    return value.length === 0 ? null : from_candid_HtlcRecord_n3(_uploadFile, _downloadFile, value[0]);
 }
-function from_candid_record_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_opt_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_record_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     id: _HtlcId;
     status: _HtlcStatus;
     senderLxmfHash: _LxmfHash;
@@ -306,7 +354,7 @@ function from_candid_record_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint
 } {
     return {
         id: value.id,
-        status: from_candid_HtlcStatus_n8(_uploadFile, _downloadFile, value.status),
+        status: from_candid_HtlcStatus_n5(_uploadFile, _downloadFile, value.status),
         senderLxmfHash: value.senderLxmfHash,
         receiverLxmfHash: value.receiverLxmfHash,
         paymentHash: value.paymentHash,
@@ -314,13 +362,7 @@ function from_candid_record_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint
         amount: value.amount
     };
 }
-function from_candid_tuple_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [_HtlcId, _HtlcRecord]): [HtlcId, HtlcRecord] {
-    return [
-        value[0],
-        from_candid_HtlcRecord_n6(_uploadFile, _downloadFile, value[1])
-    ];
-}
-function from_candid_variant_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     Refunded: null;
 } | {
     Released: null;
@@ -329,19 +371,10 @@ function from_candid_variant_n9(_uploadFile: (file: ExternalBlob) => Promise<Uin
 }): HtlcStatus {
     return "Refunded" in value ? HtlcStatus.Refunded : "Released" in value ? HtlcStatus.Released : "Locked" in value ? HtlcStatus.Locked : value;
 }
-function from_candid_vec_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_HtlcRecord>): Array<HtlcRecord> {
-    return value.map((x)=>from_candid_HtlcRecord_n6(_uploadFile, _downloadFile, x));
+function from_candid_vec_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_HtlcRecord>): Array<HtlcRecord> {
+    return value.map((x)=>from_candid_HtlcRecord_n3(_uploadFile, _downloadFile, x));
 }
-function from_candid_vec_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<[_HtlcId, _HtlcRecord]>): Array<[HtlcId, HtlcRecord]> {
-    return value.map((x)=>from_candid_tuple_n5(_uploadFile, _downloadFile, x));
-}
-function to_candid_opt_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: LxmfHash | null): [] | [_LxmfHash] {
-    return value === null ? candid_none() : candid_some(value);
-}
-function to_candid_opt_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: bigint | null): [] | [bigint] {
-    return value === null ? candid_none() : candid_some(value);
-}
-function to_candid_opt_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: HtlcId | null): [] | [_HtlcId] {
+function to_candid_opt_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: bigint | null): [] | [bigint] {
     return value === null ? candid_none() : candid_some(value);
 }
 export interface CreateActorOptions {

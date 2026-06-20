@@ -9,6 +9,7 @@ mixin (
   htlcs : Map.Map<Common.HtlcId, Types.HtlcRecord>,
   eventLog : List.List<Types.EventLogEntry>,
   nextHtlcId : { var value : Nat },
+  publicKeys : Map.Map<Common.LxmfHash, Text>,
 ) {
   public func deposit(lxmfHash : Common.LxmfHash, amount : Nat) : async () {
     PaymentsLib.deposit(balances, lxmfHash, amount);
@@ -24,8 +25,9 @@ mixin (
     amount : Nat,
     paymentHash : Text,
     expirySeconds : Nat,
+    signature : Text,
   ) : async Common.HtlcId {
-    PaymentsLib.lockHTLC(balances, htlcs, eventLog, nextHtlcId, senderLxmfHash, receiverLxmfHash, amount, paymentHash, expirySeconds);
+    PaymentsLib.lockHTLC(balances, htlcs, eventLog, nextHtlcId, publicKeys, senderLxmfHash, receiverLxmfHash, amount, paymentHash, expirySeconds, signature);
   };
 
   public func releaseHTLC(htlcId : Common.HtlcId, preimage : Text) : async () {
@@ -42,5 +44,13 @@ mixin (
 
   public query func listHTLCsForAddress(lxmfHash : Common.LxmfHash) : async [Types.HtlcRecord] {
     PaymentsLib.listHTLCsForAddress(htlcs, lxmfHash);
+  };
+
+  public func registerPublicKey(lxmfHash : Common.LxmfHash, publicKeyHex : Text) : async () {
+    PaymentsLib.registerPublicKey(publicKeys, eventLog, lxmfHash, publicKeyHex);
+  };
+
+  public query func getRegisteredPublicKey(lxmfHash : Common.LxmfHash) : async ?Text {
+    PaymentsLib.getRegisteredPublicKey(publicKeys, lxmfHash);
   };
 };

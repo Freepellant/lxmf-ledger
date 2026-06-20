@@ -27,28 +27,25 @@ export type HtlcStatus = { 'Refunded' : null } |
 export type LxmfHash = string;
 export type Timestamp = bigint;
 export interface _SERVICE {
-  '__balances' : ActorMethod<
-    [[] | [LxmfHash], [] | [bigint]],
-    Array<[LxmfHash, bigint]>
-  >,
+  '__balances' : ActorMethod<[], any>,
   '__eventLog' : ActorMethod<
     [[] | [bigint], [] | [bigint]],
     Array<EventLogEntry>
   >,
-  '__htlcs' : ActorMethod<
-    [[] | [HtlcId], [] | [bigint]],
-    Array<[HtlcId, HtlcRecord]>
-  >,
+  '__htlcs' : ActorMethod<[], any>,
   '__nextHtlcId' : ActorMethod<[], any>,
+  '__publicKeys' : ActorMethod<[], any>,
   'deposit' : ActorMethod<[LxmfHash, bigint], undefined>,
   'getBalance' : ActorMethod<[LxmfHash], bigint>,
   'getHTLC' : ActorMethod<[HtlcId], [] | [HtlcRecord]>,
+  'getRegisteredPublicKey' : ActorMethod<[LxmfHash], [] | [string]>,
   'listHTLCsForAddress' : ActorMethod<[LxmfHash], Array<HtlcRecord>>,
   'lockHTLC' : ActorMethod<
-    [LxmfHash, LxmfHash, bigint, string, bigint],
+    [LxmfHash, LxmfHash, bigint, string, bigint, string],
     HtlcId
   >,
   'refundHTLC' : ActorMethod<[HtlcId], undefined>,
+  'registerPublicKey' : ActorMethod<[LxmfHash, string], undefined>,
   'releaseHTLC' : ActorMethod<[HtlcId, string], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;

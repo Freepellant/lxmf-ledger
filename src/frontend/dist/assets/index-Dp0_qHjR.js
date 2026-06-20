@@ -31422,7 +31422,7 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$7 = [
+const __iconNode$9 = [
   [
     "path",
     {
@@ -31431,27 +31431,27 @@ const __iconNode$7 = [
     }
   ]
 ];
-const Activity = createLucideIcon("activity", __iconNode$7);
+const Activity = createLucideIcon("activity", __iconNode$9);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$6 = [
+const __iconNode$8 = [
   ["circle", { cx: "8", cy: "8", r: "6", key: "3yglwk" }],
   ["path", { d: "M18.09 10.37A6 6 0 1 1 10.34 18", key: "t5s6rm" }],
   ["path", { d: "M7 6h1v4", key: "1obek4" }],
   ["path", { d: "m16.71 13.88.7.71-2.82 2.82", key: "1rbuyh" }]
 ];
-const Coins = createLucideIcon("coins", __iconNode$6);
+const Coins = createLucideIcon("coins", __iconNode$8);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$5 = [
+const __iconNode$7 = [
   [
     "path",
     {
@@ -31467,7 +31467,35 @@ const __iconNode$5 = [
     }
   ]
 ];
-const Droplets = createLucideIcon("droplets", __iconNode$5);
+const Droplets = createLucideIcon("droplets", __iconNode$7);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$6 = [
+  [
+    "path",
+    {
+      d: "M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z",
+      key: "1s6t7t"
+    }
+  ],
+  ["circle", { cx: "16.5", cy: "7.5", r: ".5", fill: "currentColor", key: "w0ekpg" }]
+];
+const KeyRound = createLucideIcon("key-round", __iconNode$6);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$5 = [
+  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
+  ["path", { d: "M7 11V7a5 5 0 0 1 9.9-1", key: "1mm8w8" }]
+];
+const LockOpen = createLucideIcon("lock-open", __iconNode$5);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31476,9 +31504,9 @@ const Droplets = createLucideIcon("droplets", __iconNode$5);
  */
 const __iconNode$4 = [
   ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
-  ["path", { d: "M7 11V7a5 5 0 0 1 9.9-1", key: "1mm8w8" }]
+  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
 ];
-const LockOpen = createLucideIcon("lock-open", __iconNode$4);
+const Lock = createLucideIcon("lock", __iconNode$4);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31486,10 +31514,12 @@ const LockOpen = createLucideIcon("lock-open", __iconNode$4);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$3 = [
-  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
-  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
+  ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", key: "v9h5vc" }],
+  ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
+  ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
+  ["path", { d: "M8 16H3v5", key: "1cv678" }]
 ];
-const Lock = createLucideIcon("lock", __iconNode$3);
+const RefreshCw = createLucideIcon("refresh-cw", __iconNode$3);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31497,12 +31527,16 @@ const Lock = createLucideIcon("lock", __iconNode$3);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$2 = [
-  ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", key: "v9h5vc" }],
-  ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
-  ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
-  ["path", { d: "M8 16H3v5", key: "1cv678" }]
+  [
+    "path",
+    {
+      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+      key: "oel41y"
+    }
+  ],
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
 ];
-const RefreshCw = createLucideIcon("refresh-cw", __iconNode$2);
+const ShieldCheck = createLucideIcon("shield-check", __iconNode$2);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31889,8 +31923,8 @@ const Toaster = ({ ...props }) => {
     }
   );
 };
-const LxmfHash = Text;
 const EventLogEntry = Text;
+const LxmfHash = Text;
 const HtlcId = Text;
 const HtlcStatus$1 = Variant({
   "Refunded": Null,
@@ -31908,41 +31942,40 @@ const HtlcRecord = Record({
   "amount": Nat
 });
 Service({
-  "__balances": Func(
-    [Opt(LxmfHash), Opt(Nat)],
-    [Vec(Tuple(LxmfHash, Nat))],
-    ["query"]
-  ),
+  "__balances": Func([], [Reserved], ["query"]),
   "__eventLog": Func(
     [Opt(Nat), Opt(Nat)],
     [Vec(EventLogEntry)],
     ["query"]
   ),
-  "__htlcs": Func(
-    [Opt(HtlcId), Opt(Nat)],
-    [Vec(Tuple(HtlcId, HtlcRecord))],
-    ["query"]
-  ),
+  "__htlcs": Func([], [Reserved], ["query"]),
   "__nextHtlcId": Func([], [Reserved], ["query"]),
+  "__publicKeys": Func([], [Reserved], ["query"]),
   "deposit": Func([LxmfHash, Nat], [], []),
   "getBalance": Func([LxmfHash], [Nat], ["query"]),
   "getHTLC": Func([HtlcId], [Opt(HtlcRecord)], ["query"]),
+  "getRegisteredPublicKey": Func(
+    [LxmfHash],
+    [Opt(Text)],
+    ["query"]
+  ),
   "listHTLCsForAddress": Func(
     [LxmfHash],
     [Vec(HtlcRecord)],
     ["query"]
   ),
   "lockHTLC": Func(
-    [LxmfHash, LxmfHash, Nat, Text, Nat],
+    [LxmfHash, LxmfHash, Nat, Text, Nat, Text],
     [HtlcId],
     []
   ),
   "refundHTLC": Func([HtlcId], [], []),
+  "registerPublicKey": Func([LxmfHash, Text], [], []),
   "releaseHTLC": Func([HtlcId, Text], [], [])
 });
 const idlFactory = ({ IDL: IDL2 }) => {
-  const LxmfHash2 = IDL2.Text;
   const EventLogEntry2 = IDL2.Text;
+  const LxmfHash2 = IDL2.Text;
   const HtlcId2 = IDL2.Text;
   const HtlcStatus2 = IDL2.Variant({
     "Refunded": IDL2.Null,
@@ -31960,36 +31993,35 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "amount": IDL2.Nat
   });
   return IDL2.Service({
-    "__balances": IDL2.Func(
-      [IDL2.Opt(LxmfHash2), IDL2.Opt(IDL2.Nat)],
-      [IDL2.Vec(IDL2.Tuple(LxmfHash2, IDL2.Nat))],
-      ["query"]
-    ),
+    "__balances": IDL2.Func([], [IDL2.Reserved], ["query"]),
     "__eventLog": IDL2.Func(
       [IDL2.Opt(IDL2.Nat), IDL2.Opt(IDL2.Nat)],
       [IDL2.Vec(EventLogEntry2)],
       ["query"]
     ),
-    "__htlcs": IDL2.Func(
-      [IDL2.Opt(HtlcId2), IDL2.Opt(IDL2.Nat)],
-      [IDL2.Vec(IDL2.Tuple(HtlcId2, HtlcRecord2))],
-      ["query"]
-    ),
+    "__htlcs": IDL2.Func([], [IDL2.Reserved], ["query"]),
     "__nextHtlcId": IDL2.Func([], [IDL2.Reserved], ["query"]),
+    "__publicKeys": IDL2.Func([], [IDL2.Reserved], ["query"]),
     "deposit": IDL2.Func([LxmfHash2, IDL2.Nat], [], []),
     "getBalance": IDL2.Func([LxmfHash2], [IDL2.Nat], ["query"]),
     "getHTLC": IDL2.Func([HtlcId2], [IDL2.Opt(HtlcRecord2)], ["query"]),
+    "getRegisteredPublicKey": IDL2.Func(
+      [LxmfHash2],
+      [IDL2.Opt(IDL2.Text)],
+      ["query"]
+    ),
     "listHTLCsForAddress": IDL2.Func(
       [LxmfHash2],
       [IDL2.Vec(HtlcRecord2)],
       ["query"]
     ),
     "lockHTLC": IDL2.Func(
-      [LxmfHash2, LxmfHash2, IDL2.Nat, IDL2.Text, IDL2.Nat],
+      [LxmfHash2, LxmfHash2, IDL2.Nat, IDL2.Text, IDL2.Nat, IDL2.Text],
       [HtlcId2],
       []
     ),
     "refundHTLC": IDL2.Func([HtlcId2], [], []),
+    "registerPublicKey": IDL2.Func([LxmfHash2, IDL2.Text], [], []),
     "releaseHTLC": IDL2.Func([HtlcId2, IDL2.Text], [], [])
   });
 };
@@ -32014,46 +32046,46 @@ class Backend {
     this._downloadFile = _downloadFile;
     this.processError = processError2;
   }
-  async __balances(arg0, arg1) {
+  async __balances() {
     if (this.processError) {
       try {
-        const result = await this.actor.__balances(to_candid_opt_n1(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n2(this._uploadFile, this._downloadFile, arg1));
+        const result = await this.actor.__balances();
         return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.__balances(to_candid_opt_n1(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n2(this._uploadFile, this._downloadFile, arg1));
+      const result = await this.actor.__balances();
       return result;
     }
   }
   async __eventLog(arg0, arg1) {
     if (this.processError) {
       try {
-        const result = await this.actor.__eventLog(to_candid_opt_n2(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n2(this._uploadFile, this._downloadFile, arg1));
+        const result = await this.actor.__eventLog(to_candid_opt_n1(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n1(this._uploadFile, this._downloadFile, arg1));
         return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.__eventLog(to_candid_opt_n2(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n2(this._uploadFile, this._downloadFile, arg1));
+      const result = await this.actor.__eventLog(to_candid_opt_n1(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n1(this._uploadFile, this._downloadFile, arg1));
       return result;
     }
   }
-  async __htlcs(arg0, arg1) {
+  async __htlcs() {
     if (this.processError) {
       try {
-        const result = await this.actor.__htlcs(to_candid_opt_n3(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n2(this._uploadFile, this._downloadFile, arg1));
-        return from_candid_vec_n4(this._uploadFile, this._downloadFile, result);
+        const result = await this.actor.__htlcs();
+        return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.__htlcs(to_candid_opt_n3(this._uploadFile, this._downloadFile, arg0), to_candid_opt_n2(this._uploadFile, this._downloadFile, arg1));
-      return from_candid_vec_n4(this._uploadFile, this._downloadFile, result);
+      const result = await this.actor.__htlcs();
+      return result;
     }
   }
   async __nextHtlcId() {
@@ -32067,6 +32099,20 @@ class Backend {
       }
     } else {
       const result = await this.actor.__nextHtlcId();
+      return result;
+    }
+  }
+  async __publicKeys() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.__publicKeys();
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.__publicKeys();
       return result;
     }
   }
@@ -32102,41 +32148,55 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.getHTLC(arg0);
-        return from_candid_opt_n10(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n2(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getHTLC(arg0);
-      return from_candid_opt_n10(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n2(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getRegisteredPublicKey(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getRegisteredPublicKey(arg0);
+        return from_candid_opt_n7(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getRegisteredPublicKey(arg0);
+      return from_candid_opt_n7(this._uploadFile, this._downloadFile, result);
     }
   }
   async listHTLCsForAddress(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.listHTLCsForAddress(arg0);
-        return from_candid_vec_n11(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n8(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.listHTLCsForAddress(arg0);
-      return from_candid_vec_n11(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n8(this._uploadFile, this._downloadFile, result);
     }
   }
-  async lockHTLC(arg0, arg1, arg2, arg3, arg4) {
+  async lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5) {
     if (this.processError) {
       try {
-        const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4);
+        const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5);
         return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4);
+      const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5);
       return result;
     }
   }
@@ -32151,6 +32211,20 @@ class Backend {
       }
     } else {
       const result = await this.actor.refundHTLC(arg0);
+      return result;
+    }
+  }
+  async registerPublicKey(arg0, arg1) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.registerPublicKey(arg0, arg1);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.registerPublicKey(arg0, arg1);
       return result;
     }
   }
@@ -32169,19 +32243,22 @@ class Backend {
     }
   }
 }
-function from_candid_HtlcRecord_n6(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n7(_uploadFile, _downloadFile, value);
+function from_candid_HtlcRecord_n3(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n4(_uploadFile, _downloadFile, value);
 }
-function from_candid_HtlcStatus_n8(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n9(_uploadFile, _downloadFile, value);
+function from_candid_HtlcStatus_n5(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n6(_uploadFile, _downloadFile, value);
 }
-function from_candid_opt_n10(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : from_candid_HtlcRecord_n6(_uploadFile, _downloadFile, value[0]);
+function from_candid_opt_n2(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : from_candid_HtlcRecord_n3(_uploadFile, _downloadFile, value[0]);
 }
-function from_candid_record_n7(_uploadFile, _downloadFile, value) {
+function from_candid_opt_n7(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : value[0];
+}
+function from_candid_record_n4(_uploadFile, _downloadFile, value) {
   return {
     id: value.id,
-    status: from_candid_HtlcStatus_n8(_uploadFile, _downloadFile, value.status),
+    status: from_candid_HtlcStatus_n5(_uploadFile, _downloadFile, value.status),
     senderLxmfHash: value.senderLxmfHash,
     receiverLxmfHash: value.receiverLxmfHash,
     paymentHash: value.paymentHash,
@@ -32189,28 +32266,13 @@ function from_candid_record_n7(_uploadFile, _downloadFile, value) {
     amount: value.amount
   };
 }
-function from_candid_tuple_n5(_uploadFile, _downloadFile, value) {
-  return [
-    value[0],
-    from_candid_HtlcRecord_n6(_uploadFile, _downloadFile, value[1])
-  ];
-}
-function from_candid_variant_n9(_uploadFile, _downloadFile, value) {
+function from_candid_variant_n6(_uploadFile, _downloadFile, value) {
   return "Refunded" in value ? "Refunded" : "Released" in value ? "Released" : "Locked" in value ? "Locked" : value;
 }
-function from_candid_vec_n11(_uploadFile, _downloadFile, value) {
-  return value.map((x3) => from_candid_HtlcRecord_n6(_uploadFile, _downloadFile, x3));
-}
-function from_candid_vec_n4(_uploadFile, _downloadFile, value) {
-  return value.map((x3) => from_candid_tuple_n5(_uploadFile, _downloadFile, x3));
+function from_candid_vec_n8(_uploadFile, _downloadFile, value) {
+  return value.map((x3) => from_candid_HtlcRecord_n3(_uploadFile, _downloadFile, x3));
 }
 function to_candid_opt_n1(_uploadFile, _downloadFile, value) {
-  return value === null ? candid_none() : candid_some(value);
-}
-function to_candid_opt_n2(_uploadFile, _downloadFile, value) {
-  return value === null ? candid_none() : candid_some(value);
-}
-function to_candid_opt_n3(_uploadFile, _downloadFile, value) {
   return value === null ? candid_none() : candid_some(value);
 }
 function createActor(canisterId, _uploadFile, _downloadFile, options = {}) {
@@ -35639,7 +35701,8 @@ function useLockHTLC() {
         params.receiverLxmfHash,
         params.amount,
         params.paymentHash,
-        params.expirySeconds
+        params.expirySeconds,
+        params.signature
       );
     },
     onSuccess: (_2, variables) => {
@@ -35686,6 +35749,43 @@ function useReleaseHTLC() {
     onError: (error) => {
       ue.error(
         `Release failed: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    }
+  });
+}
+function useGetRegisteredPublicKey(lxmfHash) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery({
+    queryKey: ["publicKey", lxmfHash],
+    queryFn: async () => {
+      if (!actor) return null;
+      return actor.getRegisteredPublicKey(lxmfHash);
+    },
+    enabled: !!actor && !isFetching && lxmfHash.length > 0,
+    refetchInterval: 5e3
+  });
+}
+function useRegisterPublicKey() {
+  const { actor } = useActor(createActor);
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      lxmfHash,
+      publicKeyHex
+    }) => {
+      if (!actor) throw new Error("Actor not available");
+      return actor.registerPublicKey(lxmfHash, publicKeyHex);
+    },
+    onSuccess: (_2, variables) => {
+      queryClient2.invalidateQueries({
+        queryKey: ["publicKey", variables.lxmfHash]
+      });
+      queryClient2.invalidateQueries({ queryKey: ["eventLog"] });
+      ue.success("Public key registered successfully");
+    },
+    onError: (error) => {
+      ue.error(
+        `Registration failed: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   });
@@ -35764,21 +35864,40 @@ function Dashboard() {
     receiver: "",
     amount: "",
     paymentHash: "",
-    expiry: "300"
+    expiry: "300",
+    signature: ""
   });
+  const [publicKeyForm, setPublicKeyForm] = reactExports.useState({
+    lxmfHash: "",
+    publicKeyHex: ""
+  });
+  const { data: registeredPublicKey, isLoading: publicKeyLoading } = useGetRegisteredPublicKey(lxmfHash);
+  const registerPublicKeyMutation = useRegisterPublicKey();
   const handleDeposit = () => {
     if (!lxmfHash || !depositAmount) return;
     depositMutation.mutate({ lxmfHash, amount: BigInt(depositAmount) });
   };
   const handleLock = () => {
-    if (!lockForm.sender || !lockForm.receiver || !lockForm.amount || !lockForm.paymentHash)
+    if (!lockForm.sender || !lockForm.receiver || !lockForm.amount || !lockForm.paymentHash || !lockForm.signature)
       return;
     lockMutation.mutate({
       senderLxmfHash: lockForm.sender,
       receiverLxmfHash: lockForm.receiver,
       amount: BigInt(lockForm.amount),
       paymentHash: lockForm.paymentHash,
-      expirySeconds: BigInt(lockForm.expiry)
+      expirySeconds: BigInt(lockForm.expiry),
+      signature: lockForm.signature
+    });
+  };
+  const handleRegisterPublicKey = () => {
+    if (!publicKeyForm.lxmfHash || !publicKeyForm.publicKeyHex) return;
+    if (publicKeyForm.publicKeyHex.length !== 64) {
+      ue.error("Public key must be exactly 64 hex characters (32 bytes)");
+      return;
+    }
+    registerPublicKeyMutation.mutate({
+      lxmfHash: publicKeyForm.lxmfHash,
+      publicKeyHex: publicKeyForm.publicKeyHex
     });
   };
   const handleRelease = (htlcId) => {
@@ -35832,7 +35951,28 @@ function Dashboard() {
           /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader, { className: "pb-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs(CardDescription, { className: "flex items-center gap-2 text-muted-foreground", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Wallet, { className: "h-4 w-4" }),
-              "Balance"
+              "Balance",
+              publicKeyLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-4 w-16" }) : registeredPublicKey ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                Badge,
+                {
+                  variant: "outline",
+                  className: "text-success border-success/30 bg-success/10 gap-1",
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { className: "h-3 w-3" }),
+                    "Key Registered"
+                  ]
+                }
+              ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                Badge,
+                {
+                  variant: "outline",
+                  className: "text-warning border-warning/30 bg-warning/10 gap-1",
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(KeyRound, { className: "h-3 w-3" }),
+                    "No Key"
+                  ]
+                }
+              )
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "text-3xl font-display", children: balanceLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-9 w-32" }) : `${formatBalance(balance ?? 0n)}` })
           ] }),
@@ -35859,6 +35999,64 @@ function Dashboard() {
           /* @__PURE__ */ jsxRuntimeExports.jsx(CardContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "All time locked value" }) })
         ] })
       ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Separator, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "space-y-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "font-display text-xl font-semibold text-foreground flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(KeyRound, { className: "h-5 w-5 text-primary" }),
+        "Register Public Key"
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { className: "bg-card border-border", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "pt-6 space-y-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-4 sm:grid-cols-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "reg-lxmf-hash", children: "LXMF Hash" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                id: "reg-lxmf-hash",
+                "data-ocid": "publickey.lxmf_input",
+                placeholder: "Enter LXMF hash to register key for",
+                value: publicKeyForm.lxmfHash,
+                onChange: (e) => setPublicKeyForm((f2) => ({
+                  ...f2,
+                  lxmfHash: e.target.value
+                })),
+                className: "font-mono"
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "public-key-hex", children: "Public Key (hex, 64 chars)" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                id: "public-key-hex",
+                "data-ocid": "publickey.key_input",
+                placeholder: "Hex-encoded Ed25519 public key",
+                value: publicKeyForm.publicKeyHex,
+                onChange: (e) => setPublicKeyForm((f2) => ({
+                  ...f2,
+                  publicKeyHex: e.target.value
+                })),
+                className: "font-mono"
+              }
+            )
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Button,
+          {
+            "data-ocid": "publickey.register_button",
+            onClick: handleRegisterPublicKey,
+            disabled: registerPublicKeyMutation.isPending || !publicKeyForm.lxmfHash || !publicKeyForm.publicKeyHex,
+            className: "gap-2",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(KeyRound, { className: "h-4 w-4" }),
+              registerPublicKeyMutation.isPending ? "Registering..." : "Register Public Key"
+            ]
+          }
+        )
+      ] }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Separator, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "space-y-4", children: [
@@ -35939,12 +36137,41 @@ function Dashboard() {
             }
           )
         ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "signature", children: "Signature (hex)" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Input,
+            {
+              id: "signature",
+              "data-ocid": "htlc.signature_input",
+              placeholder: "Ed25519 signature over the message below",
+              value: lockForm.signature,
+              onChange: (e) => setLockForm((f2) => ({ ...f2, signature: e.target.value })),
+              className: "font-mono"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Sign the exact pipe-separated message below with your Ed25519 private key offline. The frontend does not generate or store private keys." })
+        ] }),
+        lockForm.sender && lockForm.receiver && lockForm.amount && lockForm.paymentHash && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-md border bg-muted/30 p-3 space-y-1", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-medium text-foreground", children: "Message to sign:" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("code", { className: "block text-xs font-mono text-muted-foreground break-all", children: [
+            lockForm.sender,
+            "|",
+            lockForm.receiver,
+            "|",
+            lockForm.amount,
+            "|",
+            lockForm.paymentHash,
+            "|",
+            lockForm.expiry
+          ] })
+        ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           Button,
           {
             "data-ocid": "htlc.lock_button",
             onClick: handleLock,
-            disabled: lockMutation.isPending || !lockForm.sender || !lockForm.receiver || !lockForm.amount || !lockForm.paymentHash,
+            disabled: lockMutation.isPending || !lockForm.sender || !lockForm.receiver || !lockForm.amount || !lockForm.paymentHash || !lockForm.signature,
             className: "gap-2",
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "h-4 w-4" }),

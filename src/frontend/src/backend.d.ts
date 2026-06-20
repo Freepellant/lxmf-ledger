@@ -29,8 +29,10 @@ export interface backendInterface {
     deposit(lxmfHash: LxmfHash, amount: bigint): Promise<void>;
     getBalance(lxmfHash: LxmfHash): Promise<bigint>;
     getHTLC(htlcId: HtlcId): Promise<HtlcRecord | null>;
+    getRegisteredPublicKey(lxmfHash: LxmfHash): Promise<string | null>;
     listHTLCsForAddress(lxmfHash: LxmfHash): Promise<Array<HtlcRecord>>;
-    lockHTLC(senderLxmfHash: LxmfHash, receiverLxmfHash: LxmfHash, amount: bigint, paymentHash: string, expirySeconds: bigint): Promise<HtlcId>;
+    lockHTLC(senderLxmfHash: LxmfHash, receiverLxmfHash: LxmfHash, amount: bigint, paymentHash: string, expirySeconds: bigint, signature: string): Promise<HtlcId>;
     refundHTLC(htlcId: HtlcId): Promise<void>;
+    registerPublicKey(lxmfHash: LxmfHash, publicKeyHex: string): Promise<void>;
     releaseHTLC(htlcId: HtlcId, preimage: string): Promise<void>;
 }

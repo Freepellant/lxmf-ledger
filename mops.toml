@@ -25,13 +25,13 @@ extends = true
 
 [moc]
 args = [
+  "-E=M0236,M0223,M0237,M0254",
+  "-W=M0235",
+  "-A=M0241",
   "--default-persistent-actors",
   "--actor-idl=src/backend/system-idl",
   "--implicit-package=core",
   "-no-check-ir",
-  "-E=M0236,M0223,M0237,M0254",
-  "-W=M0235",
-  "-A=M0241",
   "--generate-view-queries"
 ]
 
@@ -39,3 +39,4 @@ args = [
 core = "2.5.0"
 caffeineai-data-viewer = "0.1.0"
 sha2 = "0.2.4"
+ed25519 = "0.1.0"

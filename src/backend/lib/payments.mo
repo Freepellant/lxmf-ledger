@@ -9,6 +9,8 @@ import Common "../types/common";
 import Types "../types/payments";
 import Blob "mo:core/Blob";
 import Nat8 "mo:core/Nat8";
+import Ed25519 "mo:ed25519";
+import Int "mo:core/Int";
 
 module {
   func blobToHex(blob : Blob) : Text {
@@ -44,12 +46,29 @@ module {
     htlcs : Map.Map<Common.HtlcId, Types.HtlcRecord>,
     eventLog : List.List<Types.EventLogEntry>,
     nextHtlcId : { var value : Nat },
+    publicKeys : Map.Map<Common.LxmfHash, Text>,
     senderLxmfHash : Common.LxmfHash,
     receiverLxmfHash : Common.LxmfHash,
     amount : Nat,
     paymentHash : Text,
     expirySeconds : Nat,
+    signature : Text,
   ) : Common.HtlcId {
+    let pubKeyHex = switch (publicKeys.get(senderLxmfHash)) {
+      case (?pk) { pk };
+      case (null) { Runtime.trap("sender has no registered public key — call registerPublicKey first") };
+    };
+
+    let message = senderLxmfHash # "|" # receiverLxmfHash # "|" # amount.toText() # "|" # paymentHash # "|" # expirySeconds.toText();
+    let messageBytes = message.encodeUtf8().toArray();
+    let signatureBytes = Ed25519.Utils.hexToBytes(signature);
+    let pubKeyBytes = Ed25519.Utils.hexToBytes(pubKeyHex);
+
+    let isValid = Ed25519.ED25519.verify(signatureBytes, messageBytes, pubKeyBytes);
+    if (not isValid) {
+      Runtime.trap("invalid signature — lock not authorized by sender");
+    };
+
     let currentBalance = getBalance(balances, senderLxmfHash);
     if (currentBalance < amount) {
       Runtime.trap("Insufficient balance");
@@ -159,5 +178,29 @@ module {
       };
     };
     result.toArray();
+  };
+
+  public func registerPublicKey(
+    publicKeys : Map.Map<Common.LxmfHash, Text>,
+    eventLog : List.List<Types.EventLogEntry>,
+    lxmfHash : Common.LxmfHash,
+    publicKeyHex : Text,
+  ) {
+    switch (publicKeys.get(lxmfHash)) {
+      case (?_existing) {
+        let logEntry = "Public key registration rejected: lxmfHash=" # lxmfHash # " — key already registered";
+        eventLog.add(logEntry);
+        Runtime.trap("Public key already registered for this LXMF hash");
+      };
+      case (null) {
+        publicKeys.add(lxmfHash, publicKeyHex);
+        let logEntry = "Public key registered: lxmfHash=" # lxmfHash;
+        eventLog.add(logEntry);
+      };
+    };
+  };
+
+  public func getRegisteredPublicKey(publicKeys : Map.Map<Common.LxmfHash, Text>, lxmfHash : Common.LxmfHash) : ?Text {
+    publicKeys.get(lxmfHash);
   };
 };

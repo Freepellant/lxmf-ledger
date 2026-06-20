@@ -34,21 +34,26 @@ import {
   useDeposit,
   useEventLog,
   useGetBalance,
+  useGetRegisteredPublicKey,
   useListHTLCs,
   useLockHTLC,
   useRefundHTLC,
+  useRegisterPublicKey,
   useReleaseHTLC,
 } from "@/hooks/useQueries";
 import {
   Activity,
   Coins,
   Droplets,
+  KeyRound,
   Lock,
   RefreshCw,
+  ShieldCheck,
   Unlock,
   Wallet,
 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 function formatBalance(n: bigint): string {
   return n.toLocaleString();
@@ -110,7 +115,17 @@ export default function Dashboard() {
     amount: "",
     paymentHash: "",
     expiry: "300",
+    signature: "",
   });
+
+  const [publicKeyForm, setPublicKeyForm] = useState({
+    lxmfHash: "",
+    publicKeyHex: "",
+  });
+
+  const { data: registeredPublicKey, isLoading: publicKeyLoading } =
+    useGetRegisteredPublicKey(lxmfHash);
+  const registerPublicKeyMutation = useRegisterPublicKey();
 
   const handleDeposit = () => {
     if (!lxmfHash || !depositAmount) return;
@@ -122,7 +137,8 @@ export default function Dashboard() {
       !lockForm.sender ||
       !lockForm.receiver ||
       !lockForm.amount ||
-      !lockForm.paymentHash
+      !lockForm.paymentHash ||
+      !lockForm.signature
     )
       return;
     lockMutation.mutate({
@@ -131,6 +147,19 @@ export default function Dashboard() {
       amount: BigInt(lockForm.amount),
       paymentHash: lockForm.paymentHash,
       expirySeconds: BigInt(lockForm.expiry),
+      signature: lockForm.signature,
+    });
+  };
+
+  const handleRegisterPublicKey = () => {
+    if (!publicKeyForm.lxmfHash || !publicKeyForm.publicKeyHex) return;
+    if (publicKeyForm.publicKeyHex.length !== 64) {
+      toast.error("Public key must be exactly 64 hex characters (32 bytes)");
+      return;
+    }
+    registerPublicKeyMutation.mutate({
+      lxmfHash: publicKeyForm.lxmfHash,
+      publicKeyHex: publicKeyForm.publicKeyHex,
     });
   };
 
@@ -182,6 +211,25 @@ export default function Dashboard() {
               <CardDescription className="flex items-center gap-2 text-muted-foreground">
                 <Wallet className="h-4 w-4" />
                 Balance
+                {publicKeyLoading ? (
+                  <Skeleton className="h-4 w-16" />
+                ) : registeredPublicKey ? (
+                  <Badge
+                    variant="outline"
+                    className="text-success border-success/30 bg-success/10 gap-1"
+                  >
+                    <ShieldCheck className="h-3 w-3" />
+                    Key Registered
+                  </Badge>
+                ) : (
+                  <Badge
+                    variant="outline"
+                    className="text-warning border-warning/30 bg-warning/10 gap-1"
+                  >
+                    <KeyRound className="h-3 w-3" />
+                    No Key
+                  </Badge>
+                )}
               </CardDescription>
               <CardTitle className="text-3xl font-display">
                 {balanceLoading ? (
@@ -239,6 +287,71 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </div>
+      </section>
+
+      <Separator />
+
+      {/* Public Key Registration */}
+      <section className="space-y-4">
+        <h2 className="font-display text-xl font-semibold text-foreground flex items-center gap-2">
+          <KeyRound className="h-5 w-5 text-primary" />
+          Register Public Key
+        </h2>
+        <Card className="bg-card border-border">
+          <CardContent className="pt-6 space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="reg-lxmf-hash">LXMF Hash</Label>
+                <Input
+                  id="reg-lxmf-hash"
+                  data-ocid="publickey.lxmf_input"
+                  placeholder="Enter LXMF hash to register key for"
+                  value={publicKeyForm.lxmfHash}
+                  onChange={(e) =>
+                    setPublicKeyForm((f) => ({
+                      ...f,
+                      lxmfHash: e.target.value,
+                    }))
+                  }
+                  className="font-mono"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="public-key-hex">
+                  Public Key (hex, 64 chars)
+                </Label>
+                <Input
+                  id="public-key-hex"
+                  data-ocid="publickey.key_input"
+                  placeholder="Hex-encoded Ed25519 public key"
+                  value={publicKeyForm.publicKeyHex}
+                  onChange={(e) =>
+                    setPublicKeyForm((f) => ({
+                      ...f,
+                      publicKeyHex: e.target.value,
+                    }))
+                  }
+                  className="font-mono"
+                />
+              </div>
+            </div>
+            <Button
+              data-ocid="publickey.register_button"
+              onClick={handleRegisterPublicKey}
+              disabled={
+                registerPublicKeyMutation.isPending ||
+                !publicKeyForm.lxmfHash ||
+                !publicKeyForm.publicKeyHex
+              }
+              className="gap-2"
+            >
+              <KeyRound className="h-4 w-4" />
+              {registerPublicKeyMutation.isPending
+                ? "Registering..."
+                : "Register Public Key"}
+            </Button>
+          </CardContent>
+        </Card>
       </section>
 
       <Separator />
@@ -318,6 +431,38 @@ export default function Dashboard() {
                 className="font-mono"
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="signature">Signature (hex)</Label>
+              <Input
+                id="signature"
+                data-ocid="htlc.signature_input"
+                placeholder="Ed25519 signature over the message below"
+                value={lockForm.signature}
+                onChange={(e) =>
+                  setLockForm((f) => ({ ...f, signature: e.target.value }))
+                }
+                className="font-mono"
+              />
+              <p className="text-xs text-muted-foreground">
+                Sign the exact pipe-separated message below with your Ed25519
+                private key offline. The frontend does not generate or store
+                private keys.
+              </p>
+            </div>
+            {lockForm.sender &&
+              lockForm.receiver &&
+              lockForm.amount &&
+              lockForm.paymentHash && (
+                <div className="rounded-md border bg-muted/30 p-3 space-y-1">
+                  <p className="text-xs font-medium text-foreground">
+                    Message to sign:
+                  </p>
+                  <code className="block text-xs font-mono text-muted-foreground break-all">
+                    {lockForm.sender}|{lockForm.receiver}|{lockForm.amount}|
+                    {lockForm.paymentHash}|{lockForm.expiry}
+                  </code>
+                </div>
+              )}
             <Button
               data-ocid="htlc.lock_button"
               onClick={handleLock}
@@ -326,7 +471,8 @@ export default function Dashboard() {
                 !lockForm.sender ||
                 !lockForm.receiver ||
                 !lockForm.amount ||
-                !lockForm.paymentHash
+                !lockForm.paymentHash ||
+                !lockForm.signature
               }
               className="gap-2"
             >

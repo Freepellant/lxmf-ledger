@@ -8,8 +8,8 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
-export const LxmfHash = IDL.Text;
 export const EventLogEntry = IDL.Text;
+export const LxmfHash = IDL.Text;
 export const HtlcId = IDL.Text;
 export const HtlcStatus = IDL.Variant({
   'Refunded' : IDL.Null,
@@ -28,44 +28,43 @@ export const HtlcRecord = IDL.Record({
 });
 
 export const idlService = IDL.Service({
-  '__balances' : IDL.Func(
-      [IDL.Opt(LxmfHash), IDL.Opt(IDL.Nat)],
-      [IDL.Vec(IDL.Tuple(LxmfHash, IDL.Nat))],
-      ['query'],
-    ),
+  '__balances' : IDL.Func([], [IDL.Reserved], ['query']),
   '__eventLog' : IDL.Func(
       [IDL.Opt(IDL.Nat), IDL.Opt(IDL.Nat)],
       [IDL.Vec(EventLogEntry)],
       ['query'],
     ),
-  '__htlcs' : IDL.Func(
-      [IDL.Opt(HtlcId), IDL.Opt(IDL.Nat)],
-      [IDL.Vec(IDL.Tuple(HtlcId, HtlcRecord))],
-      ['query'],
-    ),
+  '__htlcs' : IDL.Func([], [IDL.Reserved], ['query']),
   '__nextHtlcId' : IDL.Func([], [IDL.Reserved], ['query']),
+  '__publicKeys' : IDL.Func([], [IDL.Reserved], ['query']),
   'deposit' : IDL.Func([LxmfHash, IDL.Nat], [], []),
   'getBalance' : IDL.Func([LxmfHash], [IDL.Nat], ['query']),
   'getHTLC' : IDL.Func([HtlcId], [IDL.Opt(HtlcRecord)], ['query']),
+  'getRegisteredPublicKey' : IDL.Func(
+      [LxmfHash],
+      [IDL.Opt(IDL.Text)],
+      ['query'],
+    ),
   'listHTLCsForAddress' : IDL.Func(
       [LxmfHash],
       [IDL.Vec(HtlcRecord)],
       ['query'],
     ),
   'lockHTLC' : IDL.Func(
-      [LxmfHash, LxmfHash, IDL.Nat, IDL.Text, IDL.Nat],
+      [LxmfHash, LxmfHash, IDL.Nat, IDL.Text, IDL.Nat, IDL.Text],
       [HtlcId],
       [],
     ),
   'refundHTLC' : IDL.Func([HtlcId], [], []),
+  'registerPublicKey' : IDL.Func([LxmfHash, IDL.Text], [], []),
   'releaseHTLC' : IDL.Func([HtlcId, IDL.Text], [], []),
 });
 
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
-  const LxmfHash = IDL.Text;
   const EventLogEntry = IDL.Text;
+  const LxmfHash = IDL.Text;
   const HtlcId = IDL.Text;
   const HtlcStatus = IDL.Variant({
     'Refunded' : IDL.Null,
@@ -84,36 +83,35 @@ export const idlFactory = ({ IDL }) => {
   });
   
   return IDL.Service({
-    '__balances' : IDL.Func(
-        [IDL.Opt(LxmfHash), IDL.Opt(IDL.Nat)],
-        [IDL.Vec(IDL.Tuple(LxmfHash, IDL.Nat))],
-        ['query'],
-      ),
+    '__balances' : IDL.Func([], [IDL.Reserved], ['query']),
     '__eventLog' : IDL.Func(
         [IDL.Opt(IDL.Nat), IDL.Opt(IDL.Nat)],
         [IDL.Vec(EventLogEntry)],
         ['query'],
       ),
-    '__htlcs' : IDL.Func(
-        [IDL.Opt(HtlcId), IDL.Opt(IDL.Nat)],
-        [IDL.Vec(IDL.Tuple(HtlcId, HtlcRecord))],
-        ['query'],
-      ),
+    '__htlcs' : IDL.Func([], [IDL.Reserved], ['query']),
     '__nextHtlcId' : IDL.Func([], [IDL.Reserved], ['query']),
+    '__publicKeys' : IDL.Func([], [IDL.Reserved], ['query']),
     'deposit' : IDL.Func([LxmfHash, IDL.Nat], [], []),
     'getBalance' : IDL.Func([LxmfHash], [IDL.Nat], ['query']),
     'getHTLC' : IDL.Func([HtlcId], [IDL.Opt(HtlcRecord)], ['query']),
+    'getRegisteredPublicKey' : IDL.Func(
+        [LxmfHash],
+        [IDL.Opt(IDL.Text)],
+        ['query'],
+      ),
     'listHTLCsForAddress' : IDL.Func(
         [LxmfHash],
         [IDL.Vec(HtlcRecord)],
         ['query'],
       ),
     'lockHTLC' : IDL.Func(
-        [LxmfHash, LxmfHash, IDL.Nat, IDL.Text, IDL.Nat],
+        [LxmfHash, LxmfHash, IDL.Nat, IDL.Text, IDL.Nat, IDL.Text],
         [HtlcId],
         [],
       ),
     'refundHTLC' : IDL.Func([HtlcId], [], []),
+    'registerPublicKey' : IDL.Func([LxmfHash, IDL.Text], [], []),
     'releaseHTLC' : IDL.Func([HtlcId, IDL.Text], [], []),
   });
 };

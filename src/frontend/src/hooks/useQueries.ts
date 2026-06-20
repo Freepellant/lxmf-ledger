@@ -78,6 +78,7 @@ export function useLockHTLC() {
       amount: bigint;
       paymentHash: string;
       expirySeconds: bigint;
+      signature: string;
     }) => {
       if (!actor) throw new Error("Actor not available");
       return actor.lockHTLC(
@@ -86,6 +87,7 @@ export function useLockHTLC() {
         params.amount,
         params.paymentHash,
         params.expirySeconds,
+        params.signature,
       );
     },
     onSuccess: (_, variables) => {
@@ -133,6 +135,45 @@ export function useReleaseHTLC() {
     onError: (error) => {
       toast.error(
         `Release failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    },
+  });
+}
+
+export function useGetRegisteredPublicKey(lxmfHash: string) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<string | null>({
+    queryKey: ["publicKey", lxmfHash],
+    queryFn: async () => {
+      if (!actor) return null;
+      return actor.getRegisteredPublicKey(lxmfHash);
+    },
+    enabled: !!actor && !isFetching && lxmfHash.length > 0,
+    refetchInterval: 5000,
+  });
+}
+
+export function useRegisterPublicKey() {
+  const { actor } = useActor(createActor);
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      lxmfHash,
+      publicKeyHex,
+    }: { lxmfHash: string; publicKeyHex: string }) => {
+      if (!actor) throw new Error("Actor not available");
+      return actor.registerPublicKey(lxmfHash, publicKeyHex);
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["publicKey", variables.lxmfHash],
+      });
+      queryClient.invalidateQueries({ queryKey: ["eventLog"] });
+      toast.success("Public key registered successfully");
+    },
+    onError: (error) => {
+      toast.error(
+        `Registration failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     },
   });

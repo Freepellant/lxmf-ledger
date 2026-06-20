@@ -31,6 +31,24 @@ type Map__709709801<K, V> =
 type Map__912772452<K, V> = Map__709709801<K, V>;
 type Nat__1040412405 = Nat__920180692;
 type Nat__920180692 = Nat;
+type NewActor__894722484 =
+  {
+    balances : Map__222667396<Text, Nat>;
+    eventLog : List__560604548<Text>;
+    htlcs :
+      Map__222667396<Text,
+                      {
+                        amount : Nat;
+                        expiry : Nat;
+                        id : Text;
+                        paymentHash : Text;
+                        receiverLxmfHash : Text;
+                        senderLxmfHash : Text;
+                        status : {#Locked; #Refunded; #Released}
+                      }>;
+    nextHtlcId : {var value : Nat};
+    publicKeys : Map__222667396<Text, Text>
+  };
 type NewActor__932940748 =
   {
     balances : Map__222667396<Text, Nat>;
@@ -50,11 +68,30 @@ type NewActor__932940748 =
   };
 type Node__1000929467<K, V> =
   {#internal : Internal__41346355<K, V>; #leaf : Leaf__712614010<K, V>};
+type OldActor__349624615 =
+  {
+    balances : Map__222667396<Text, Nat>;
+    eventLog : List__560604548<Text>;
+    htlcs :
+      Map__222667396<Text,
+                      {
+                        amount : Nat;
+                        expiry : Nat;
+                        id : Text;
+                        paymentHash : Text;
+                        receiverLxmfHash : Text;
+                        senderLxmfHash : Text;
+                        status : {#Locked; #Refunded; #Released}
+                      }>;
+    nextHtlcId : {var value : Nat}
+  };
 type OldActor__624686387 = {};
 type Timestamp__301639476 = Nat;
 {
   "20260620_000000_InitPayments" :
-    (_old : OldActor__624686387) -> NewActor__932940748
+    (_old : OldActor__624686387) -> NewActor__932940748;
+  "20260620_120000_AddPublicKeys" :
+    (old : OldActor__349624615) -> NewActor__894722484
 }
 actor  {
   stable balances :
@@ -73,5 +110,10 @@ actor  {
       var root : Node__1000929467<HtlcId__212554912, HtlcRecord__319904597>;
       var size : Nat__1040412405
     };
-  stable nextHtlcId : {var value : Nat}
+  stable nextHtlcId : {var value : Nat};
+  stable publicKeys :
+    {
+      var root : Node__1000929467<LxmfHash__955150002, Text>;
+      var size : Nat__1040412405
+    }
 };

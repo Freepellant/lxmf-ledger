@@ -10,7 +10,8 @@ actor {
   let htlcs : Map.Map<Common.HtlcId, Types.HtlcRecord>;
   let eventLog : List.List<Types.EventLogEntry>;
   let nextHtlcId : { var value : Nat };
+  let publicKeys : Map.Map<Common.LxmfHash, Text>;
 
   include MixinViews();
-  include PaymentsMixin(balances, htlcs, eventLog, nextHtlcId);
+  include PaymentsMixin(balances, htlcs, eventLog, nextHtlcId, publicKeys);
 };
