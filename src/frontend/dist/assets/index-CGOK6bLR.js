@@ -31422,7 +31422,7 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$9 = [
+const __iconNode$e = [
   [
     "path",
     {
@@ -31431,27 +31431,52 @@ const __iconNode$9 = [
     }
   ]
 ];
-const Activity = createLucideIcon("activity", __iconNode$9);
+const Activity = createLucideIcon("activity", __iconNode$e);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$8 = [
+const __iconNode$d = [
+  ["path", { d: "M8 3 4 7l4 4", key: "9rb6wj" }],
+  ["path", { d: "M4 7h16", key: "6tx8e3" }],
+  ["path", { d: "m16 21 4-4-4-4", key: "siv7j2" }],
+  ["path", { d: "M20 17H4", key: "h6l3hr" }]
+];
+const ArrowLeftRight = createLucideIcon("arrow-left-right", __iconNode$d);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$c = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "m15 9-6 6", key: "1uzhvr" }],
+  ["path", { d: "m9 9 6 6", key: "z0biqf" }]
+];
+const CircleX = createLucideIcon("circle-x", __iconNode$c);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$b = [
   ["circle", { cx: "8", cy: "8", r: "6", key: "3yglwk" }],
   ["path", { d: "M18.09 10.37A6 6 0 1 1 10.34 18", key: "t5s6rm" }],
   ["path", { d: "M7 6h1v4", key: "1obek4" }],
   ["path", { d: "m16.71 13.88.7.71-2.82 2.82", key: "1rbuyh" }]
 ];
-const Coins = createLucideIcon("coins", __iconNode$8);
+const Coins = createLucideIcon("coins", __iconNode$b);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$7 = [
+const __iconNode$a = [
   [
     "path",
     {
@@ -31467,7 +31492,45 @@ const __iconNode$7 = [
     }
   ]
 ];
-const Droplets = createLucideIcon("droplets", __iconNode$7);
+const Droplets = createLucideIcon("droplets", __iconNode$a);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$9 = [
+  ["line", { x1: "6", x2: "6", y1: "3", y2: "15", key: "17qcm7" }],
+  ["circle", { cx: "18", cy: "6", r: "3", key: "1h7g24" }],
+  ["circle", { cx: "6", cy: "18", r: "3", key: "fqmcym" }],
+  ["path", { d: "M18 9a9 9 0 0 1-9 9", key: "n2h4wq" }]
+];
+const GitBranch = createLucideIcon("git-branch", __iconNode$9);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$8 = [
+  ["circle", { cx: "18", cy: "18", r: "3", key: "1xkwt0" }],
+  ["circle", { cx: "6", cy: "6", r: "3", key: "1lh9wr" }],
+  ["path", { d: "M6 21V9a9 9 0 0 0 9 9", key: "7kw0sc" }]
+];
+const GitMerge = createLucideIcon("git-merge", __iconNode$8);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$7 = [
+  ["circle", { cx: "18", cy: "18", r: "3", key: "1xkwt0" }],
+  ["circle", { cx: "6", cy: "6", r: "3", key: "1lh9wr" }],
+  ["path", { d: "M13 6h3a2 2 0 0 1 2 2v7", key: "1yeb86" }],
+  ["line", { x1: "6", x2: "6", y1: "9", y2: "21", key: "rroup" }]
+];
+const GitPullRequest = createLucideIcon("git-pull-request", __iconNode$7);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31924,7 +31987,20 @@ const Toaster = ({ ...props }) => {
   );
 };
 const EventLogEntry = Text;
+const ChannelId = Text;
 const LxmfHash = Text;
+const ChannelStatus$1 = Variant({
+  "Open": Null,
+  "Closed": Null
+});
+const ChannelRecord = Record({
+  "id": ChannelId,
+  "status": ChannelStatus$1,
+  "lockedA": Nat,
+  "lockedB": Nat,
+  "partyA": LxmfHash,
+  "partyB": LxmfHash
+});
 const HtlcId = Text;
 const HtlcStatus$1 = Variant({
   "Refunded": Null,
@@ -31943,20 +32019,34 @@ const HtlcRecord = Record({
 });
 Service({
   "__balances": Func([], [Reserved], ["query"]),
+  "__channels": Func([], [Reserved], ["query"]),
   "__eventLog": Func(
     [Opt(Nat), Opt(Nat)],
     [Vec(EventLogEntry)],
     ["query"]
   ),
   "__htlcs": Func([], [Reserved], ["query"]),
+  "__nextChannelId": Func([], [Reserved], ["query"]),
   "__nextHtlcId": Func([], [Reserved], ["query"]),
   "__publicKeys": Func([], [Reserved], ["query"]),
+  "closeChannelCooperative": Func(
+    [ChannelId, Nat, Nat, Text, Text],
+    [],
+    []
+  ),
   "deposit": Func([LxmfHash, Nat], [], []),
   "getBalance": Func([LxmfHash], [Nat], ["query"]),
+  "getChannel": Func([ChannelId], [Opt(ChannelRecord)], ["query"]),
   "getHTLC": Func([HtlcId], [Opt(HtlcRecord)], ["query"]),
   "getRegisteredPublicKey": Func(
     [LxmfHash],
     [Opt(Text)],
+    ["query"]
+  ),
+  "joinChannel": Func([ChannelId, LxmfHash, Nat, Text], [], []),
+  "listChannelsForAddress": Func(
+    [LxmfHash],
+    [Vec(ChannelRecord)],
     ["query"]
   ),
   "listHTLCsForAddress": Func(
@@ -31969,13 +32059,28 @@ Service({
     [HtlcId],
     []
   ),
+  "openChannel": Func(
+    [LxmfHash, LxmfHash, Nat, Text],
+    [ChannelId],
+    []
+  ),
   "refundHTLC": Func([HtlcId], [], []),
   "registerPublicKey": Func([LxmfHash, Text], [], []),
   "releaseHTLC": Func([HtlcId, Text], [], [])
 });
 const idlFactory = ({ IDL: IDL2 }) => {
   const EventLogEntry2 = IDL2.Text;
+  const ChannelId2 = IDL2.Text;
   const LxmfHash2 = IDL2.Text;
+  const ChannelStatus2 = IDL2.Variant({ "Open": IDL2.Null, "Closed": IDL2.Null });
+  const ChannelRecord2 = IDL2.Record({
+    "id": ChannelId2,
+    "status": ChannelStatus2,
+    "lockedA": IDL2.Nat,
+    "lockedB": IDL2.Nat,
+    "partyA": LxmfHash2,
+    "partyB": LxmfHash2
+  });
   const HtlcId2 = IDL2.Text;
   const HtlcStatus2 = IDL2.Variant({
     "Refunded": IDL2.Null,
@@ -31994,20 +32099,34 @@ const idlFactory = ({ IDL: IDL2 }) => {
   });
   return IDL2.Service({
     "__balances": IDL2.Func([], [IDL2.Reserved], ["query"]),
+    "__channels": IDL2.Func([], [IDL2.Reserved], ["query"]),
     "__eventLog": IDL2.Func(
       [IDL2.Opt(IDL2.Nat), IDL2.Opt(IDL2.Nat)],
       [IDL2.Vec(EventLogEntry2)],
       ["query"]
     ),
     "__htlcs": IDL2.Func([], [IDL2.Reserved], ["query"]),
+    "__nextChannelId": IDL2.Func([], [IDL2.Reserved], ["query"]),
     "__nextHtlcId": IDL2.Func([], [IDL2.Reserved], ["query"]),
     "__publicKeys": IDL2.Func([], [IDL2.Reserved], ["query"]),
+    "closeChannelCooperative": IDL2.Func(
+      [ChannelId2, IDL2.Nat, IDL2.Nat, IDL2.Text, IDL2.Text],
+      [],
+      []
+    ),
     "deposit": IDL2.Func([LxmfHash2, IDL2.Nat], [], []),
     "getBalance": IDL2.Func([LxmfHash2], [IDL2.Nat], ["query"]),
+    "getChannel": IDL2.Func([ChannelId2], [IDL2.Opt(ChannelRecord2)], ["query"]),
     "getHTLC": IDL2.Func([HtlcId2], [IDL2.Opt(HtlcRecord2)], ["query"]),
     "getRegisteredPublicKey": IDL2.Func(
       [LxmfHash2],
       [IDL2.Opt(IDL2.Text)],
+      ["query"]
+    ),
+    "joinChannel": IDL2.Func([ChannelId2, LxmfHash2, IDL2.Nat, IDL2.Text], [], []),
+    "listChannelsForAddress": IDL2.Func(
+      [LxmfHash2],
+      [IDL2.Vec(ChannelRecord2)],
       ["query"]
     ),
     "listHTLCsForAddress": IDL2.Func(
@@ -32018,6 +32137,11 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "lockHTLC": IDL2.Func(
       [LxmfHash2, LxmfHash2, IDL2.Nat, IDL2.Text, IDL2.Nat, IDL2.Text],
       [HtlcId2],
+      []
+    ),
+    "openChannel": IDL2.Func(
+      [LxmfHash2, LxmfHash2, IDL2.Nat, IDL2.Text],
+      [ChannelId2],
       []
     ),
     "refundHTLC": IDL2.Func([HtlcId2], [], []),
@@ -32033,6 +32157,11 @@ function candid_some(value) {
 function candid_none() {
   return [];
 }
+var ChannelStatus = /* @__PURE__ */ ((ChannelStatus2) => {
+  ChannelStatus2["Open"] = "Open";
+  ChannelStatus2["Closed"] = "Closed";
+  return ChannelStatus2;
+})(ChannelStatus || {});
 var HtlcStatus = /* @__PURE__ */ ((HtlcStatus2) => {
   HtlcStatus2["Refunded"] = "Refunded";
   HtlcStatus2["Released"] = "Released";
@@ -32057,6 +32186,20 @@ class Backend {
       }
     } else {
       const result = await this.actor.__balances();
+      return result;
+    }
+  }
+  async __channels() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.__channels();
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.__channels();
       return result;
     }
   }
@@ -32088,6 +32231,20 @@ class Backend {
       return result;
     }
   }
+  async __nextChannelId() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.__nextChannelId();
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.__nextChannelId();
+      return result;
+    }
+  }
   async __nextHtlcId() {
     if (this.processError) {
       try {
@@ -32113,6 +32270,20 @@ class Backend {
       }
     } else {
       const result = await this.actor.__publicKeys();
+      return result;
+    }
+  }
+  async closeChannelCooperative(arg0, arg1, arg2, arg3, arg4) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.closeChannelCooperative(arg0, arg1, arg2, arg3, arg4);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.closeChannelCooperative(arg0, arg1, arg2, arg3, arg4);
       return result;
     }
   }
@@ -32144,46 +32315,88 @@ class Backend {
       return result;
     }
   }
-  async getHTLC(arg0) {
+  async getChannel(arg0) {
     if (this.processError) {
       try {
-        const result = await this.actor.getHTLC(arg0);
+        const result = await this.actor.getChannel(arg0);
         return from_candid_opt_n2(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.getHTLC(arg0);
+      const result = await this.actor.getChannel(arg0);
       return from_candid_opt_n2(this._uploadFile, this._downloadFile, result);
     }
   }
-  async getRegisteredPublicKey(arg0) {
+  async getHTLC(arg0) {
     if (this.processError) {
       try {
-        const result = await this.actor.getRegisteredPublicKey(arg0);
+        const result = await this.actor.getHTLC(arg0);
         return from_candid_opt_n7(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.getRegisteredPublicKey(arg0);
+      const result = await this.actor.getHTLC(arg0);
       return from_candid_opt_n7(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getRegisteredPublicKey(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getRegisteredPublicKey(arg0);
+        return from_candid_opt_n12(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getRegisteredPublicKey(arg0);
+      return from_candid_opt_n12(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async joinChannel(arg0, arg1, arg2, arg3) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.joinChannel(arg0, arg1, arg2, arg3);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.joinChannel(arg0, arg1, arg2, arg3);
+      return result;
+    }
+  }
+  async listChannelsForAddress(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.listChannelsForAddress(arg0);
+        return from_candid_vec_n13(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.listChannelsForAddress(arg0);
+      return from_candid_vec_n13(this._uploadFile, this._downloadFile, result);
     }
   }
   async listHTLCsForAddress(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.listHTLCsForAddress(arg0);
-        return from_candid_vec_n8(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n14(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.listHTLCsForAddress(arg0);
-      return from_candid_vec_n8(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n14(this._uploadFile, this._downloadFile, result);
     }
   }
   async lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5) {
@@ -32197,6 +32410,20 @@ class Backend {
       }
     } else {
       const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5);
+      return result;
+    }
+  }
+  async openChannel(arg0, arg1, arg2, arg3) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.openChannel(arg0, arg1, arg2, arg3);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.openChannel(arg0, arg1, arg2, arg3);
       return result;
     }
   }
@@ -32243,22 +32470,41 @@ class Backend {
     }
   }
 }
-function from_candid_HtlcRecord_n3(_uploadFile, _downloadFile, value) {
+function from_candid_ChannelRecord_n3(_uploadFile, _downloadFile, value) {
   return from_candid_record_n4(_uploadFile, _downloadFile, value);
 }
-function from_candid_HtlcStatus_n5(_uploadFile, _downloadFile, value) {
+function from_candid_ChannelStatus_n5(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n6(_uploadFile, _downloadFile, value);
 }
+function from_candid_HtlcRecord_n8(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n9(_uploadFile, _downloadFile, value);
+}
+function from_candid_HtlcStatus_n10(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n11(_uploadFile, _downloadFile, value);
+}
+function from_candid_opt_n12(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : value[0];
+}
 function from_candid_opt_n2(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : from_candid_HtlcRecord_n3(_uploadFile, _downloadFile, value[0]);
+  return value.length === 0 ? null : from_candid_ChannelRecord_n3(_uploadFile, _downloadFile, value[0]);
 }
 function from_candid_opt_n7(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : value[0];
+  return value.length === 0 ? null : from_candid_HtlcRecord_n8(_uploadFile, _downloadFile, value[0]);
 }
 function from_candid_record_n4(_uploadFile, _downloadFile, value) {
   return {
     id: value.id,
-    status: from_candid_HtlcStatus_n5(_uploadFile, _downloadFile, value.status),
+    status: from_candid_ChannelStatus_n5(_uploadFile, _downloadFile, value.status),
+    lockedA: value.lockedA,
+    lockedB: value.lockedB,
+    partyA: value.partyA,
+    partyB: value.partyB
+  };
+}
+function from_candid_record_n9(_uploadFile, _downloadFile, value) {
+  return {
+    id: value.id,
+    status: from_candid_HtlcStatus_n10(_uploadFile, _downloadFile, value.status),
     senderLxmfHash: value.senderLxmfHash,
     receiverLxmfHash: value.receiverLxmfHash,
     paymentHash: value.paymentHash,
@@ -32266,11 +32512,17 @@ function from_candid_record_n4(_uploadFile, _downloadFile, value) {
     amount: value.amount
   };
 }
-function from_candid_variant_n6(_uploadFile, _downloadFile, value) {
+function from_candid_variant_n11(_uploadFile, _downloadFile, value) {
   return "Refunded" in value ? "Refunded" : "Released" in value ? "Released" : "Locked" in value ? "Locked" : value;
 }
-function from_candid_vec_n8(_uploadFile, _downloadFile, value) {
-  return value.map((x3) => from_candid_HtlcRecord_n3(_uploadFile, _downloadFile, x3));
+function from_candid_variant_n6(_uploadFile, _downloadFile, value) {
+  return "Open" in value ? "Open" : "Closed" in value ? "Closed" : value;
+}
+function from_candid_vec_n13(_uploadFile, _downloadFile, value) {
+  return value.map((x3) => from_candid_ChannelRecord_n3(_uploadFile, _downloadFile, x3));
+}
+function from_candid_vec_n14(_uploadFile, _downloadFile, value) {
+  return value.map((x3) => from_candid_HtlcRecord_n8(_uploadFile, _downloadFile, x3));
 }
 function to_candid_opt_n1(_uploadFile, _downloadFile, value) {
   return value === null ? candid_none() : candid_some(value);
@@ -35815,6 +36067,108 @@ function useRefundHTLC() {
     }
   });
 }
+function useListChannels(lxmfHash) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery({
+    queryKey: ["channels", lxmfHash],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.listChannelsForAddress(lxmfHash);
+    },
+    enabled: !!actor && !isFetching && lxmfHash.length > 0,
+    refetchInterval: 5e3
+  });
+}
+function useOpenChannel() {
+  const { actor } = useActor(createActor);
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async (params) => {
+      if (!actor) throw new Error("Actor not available");
+      return actor.openChannel(
+        params.partyA,
+        params.partyB,
+        params.amountA,
+        params.signature
+      );
+    },
+    onSuccess: (_2, variables) => {
+      queryClient2.invalidateQueries({
+        queryKey: ["channels", variables.partyA]
+      });
+      queryClient2.invalidateQueries({
+        queryKey: ["channels", variables.partyB]
+      });
+      queryClient2.invalidateQueries({
+        queryKey: ["balance", variables.partyA]
+      });
+      queryClient2.invalidateQueries({ queryKey: ["eventLog"] });
+      ue.success("Channel opened successfully");
+    },
+    onError: (error) => {
+      ue.error(
+        `Open channel failed: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    }
+  });
+}
+function useJoinChannel() {
+  const { actor } = useActor(createActor);
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async (params) => {
+      if (!actor) throw new Error("Actor not available");
+      return actor.joinChannel(
+        params.channelId,
+        params.partyB,
+        params.amountB,
+        params.signature
+      );
+    },
+    onSuccess: (_2, variables) => {
+      queryClient2.invalidateQueries({
+        queryKey: ["channels", variables.partyB]
+      });
+      queryClient2.invalidateQueries({
+        queryKey: ["balance", variables.partyB]
+      });
+      queryClient2.invalidateQueries({ queryKey: ["eventLog"] });
+      ue.success("Channel joined successfully");
+    },
+    onError: (error) => {
+      ue.error(
+        `Join channel failed: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    }
+  });
+}
+function useCloseChannelCooperative() {
+  const { actor } = useActor(createActor);
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async (params) => {
+      if (!actor) throw new Error("Actor not available");
+      return actor.closeChannelCooperative(
+        params.channelId,
+        params.finalBalanceA,
+        params.finalBalanceB,
+        params.sigA,
+        params.sigB
+      );
+    },
+    onSuccess: () => {
+      queryClient2.invalidateQueries({ queryKey: ["channels"] });
+      queryClient2.invalidateQueries({ queryKey: ["balance"] });
+      queryClient2.invalidateQueries({ queryKey: ["eventLog"] });
+      ue.success("Channel closed cooperatively");
+    },
+    onError: (error) => {
+      ue.error(
+        `Close channel failed: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    }
+  });
+}
 function formatBalance(n) {
   return n.toLocaleString();
 }
@@ -35854,11 +36208,15 @@ function Dashboard() {
   const [preimageMap, setPreimageMap] = reactExports.useState({});
   const { data: balance, isLoading: balanceLoading } = useGetBalance(lxmfHash);
   const { data: htlcs, isLoading: htlcsLoading } = useListHTLCs(lxmfHash);
+  const { data: channels, isLoading: channelsLoading } = useListChannels(lxmfHash);
   const { data: events2, isLoading: eventsLoading } = useEventLog();
   const depositMutation = useDeposit();
   const lockMutation = useLockHTLC();
   const releaseMutation = useReleaseHTLC();
   const refundMutation = useRefundHTLC();
+  const openChannelMutation = useOpenChannel();
+  const joinChannelMutation = useJoinChannel();
+  const closeChannelMutation = useCloseChannelCooperative();
   const [lockForm, setLockForm] = reactExports.useState({
     sender: "",
     receiver: "",
@@ -35866,6 +36224,25 @@ function Dashboard() {
     paymentHash: "",
     expiry: "300",
     signature: ""
+  });
+  const [openChannelForm, setOpenChannelForm] = reactExports.useState({
+    partyA: "",
+    partyB: "",
+    amountA: "",
+    signature: ""
+  });
+  const [joinChannelForm, setJoinChannelForm] = reactExports.useState({
+    channelId: "",
+    partyB: "",
+    amountB: "",
+    signature: ""
+  });
+  const [closeChannelForm, setCloseChannelForm] = reactExports.useState({
+    channelId: "",
+    finalBalanceA: "",
+    finalBalanceB: "",
+    sigA: "",
+    sigB: ""
   });
   const [publicKeyForm, setPublicKeyForm] = reactExports.useState({
     lxmfHash: "",
@@ -35908,6 +36285,67 @@ function Dashboard() {
   const handleRefund = (htlcId) => {
     refundMutation.mutate({ htlcId, lxmfHash });
   };
+  const handleOpenChannel = () => {
+    if (!openChannelForm.partyA || !openChannelForm.partyB || !openChannelForm.amountA || !openChannelForm.signature)
+      return;
+    openChannelMutation.mutate({
+      partyA: openChannelForm.partyA,
+      partyB: openChannelForm.partyB,
+      amountA: BigInt(openChannelForm.amountA),
+      signature: openChannelForm.signature
+    });
+  };
+  const handleJoinChannel = () => {
+    if (!joinChannelForm.channelId || !joinChannelForm.partyB || !joinChannelForm.signature)
+      return;
+    joinChannelMutation.mutate({
+      channelId: joinChannelForm.channelId,
+      partyB: joinChannelForm.partyB,
+      amountB: BigInt(joinChannelForm.amountB || "0"),
+      signature: joinChannelForm.signature
+    });
+  };
+  const handleCloseChannel = () => {
+    if (!closeChannelForm.channelId || !closeChannelForm.finalBalanceA || !closeChannelForm.finalBalanceB || !closeChannelForm.sigA || !closeChannelForm.sigB)
+      return;
+    closeChannelMutation.mutate({
+      channelId: closeChannelForm.channelId,
+      finalBalanceA: BigInt(closeChannelForm.finalBalanceA),
+      finalBalanceB: BigInt(closeChannelForm.finalBalanceB),
+      sigA: closeChannelForm.sigA,
+      sigB: closeChannelForm.sigB
+    });
+  };
+  function channelStatusBadge(status) {
+    switch (status) {
+      case ChannelStatus.Open:
+        return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Badge,
+          {
+            variant: "outline",
+            className: "text-success border-success/30 bg-success/10 gap-1",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(GitBranch, { className: "h-3 w-3" }),
+              "Open"
+            ]
+          }
+        );
+      case ChannelStatus.Closed:
+        return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Badge,
+          {
+            variant: "outline",
+            className: "text-muted-foreground border-muted-foreground/30 bg-muted/10 gap-1",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(CircleX, { className: "h-3 w-3" }),
+              "Closed"
+            ]
+          }
+        );
+      default:
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "outline", children: "Unknown" });
+    }
+  }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "container mx-auto px-4 py-8 space-y-8", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "space-y-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-4 sm:flex-row sm:items-end", children: [
@@ -36180,6 +36618,378 @@ function Dashboard() {
           }
         )
       ] }) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Separator, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "space-y-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "font-display text-xl font-semibold text-foreground flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeftRight, { className: "h-5 w-5 text-primary" }),
+        "Payment Channels"
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "bg-card border-border", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader, { className: "pb-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(CardTitle, { className: "text-base font-display flex items-center gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(GitPullRequest, { className: "h-4 w-4 text-primary" }),
+            "Open Channel"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CardDescription, { children: "Lock funds from partyA to open a new channel with partyB." })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "space-y-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-4 sm:grid-cols-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "open-party-a", children: "Party A (opener)" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "open-party-a",
+                  "data-ocid": "channel.open_party_a_input",
+                  placeholder: "LXMF hash",
+                  value: openChannelForm.partyA,
+                  onChange: (e) => setOpenChannelForm((f2) => ({
+                    ...f2,
+                    partyA: e.target.value
+                  })),
+                  className: "font-mono"
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "open-party-b", children: "Party B (counterparty)" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "open-party-b",
+                  "data-ocid": "channel.open_party_b_input",
+                  placeholder: "LXMF hash",
+                  value: openChannelForm.partyB,
+                  onChange: (e) => setOpenChannelForm((f2) => ({
+                    ...f2,
+                    partyB: e.target.value
+                  })),
+                  className: "font-mono"
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "open-amount-a", children: "Amount A" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "open-amount-a",
+                  "data-ocid": "channel.open_amount_a_input",
+                  type: "number",
+                  placeholder: "Amount to lock",
+                  value: openChannelForm.amountA,
+                  onChange: (e) => setOpenChannelForm((f2) => ({
+                    ...f2,
+                    amountA: e.target.value
+                  }))
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "open-signature", children: "Signature (hex)" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "open-signature",
+                  "data-ocid": "channel.open_signature_input",
+                  placeholder: "Ed25519 signature",
+                  value: openChannelForm.signature,
+                  onChange: (e) => setOpenChannelForm((f2) => ({
+                    ...f2,
+                    signature: e.target.value
+                  })),
+                  className: "font-mono"
+                }
+              )
+            ] })
+          ] }),
+          openChannelForm.partyA && openChannelForm.partyB && openChannelForm.amountA && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-md border bg-muted/30 p-3 space-y-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-medium text-foreground", children: "Message to sign:" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("code", { className: "block text-xs font-mono text-muted-foreground break-all", children: [
+              openChannelForm.partyA,
+              "|",
+              openChannelForm.partyB,
+              "|",
+              openChannelForm.amountA
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              "data-ocid": "channel.open_button",
+              onClick: handleOpenChannel,
+              disabled: openChannelMutation.isPending || !openChannelForm.partyA || !openChannelForm.partyB || !openChannelForm.amountA || !openChannelForm.signature,
+              className: "gap-2",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(GitPullRequest, { className: "h-4 w-4" }),
+                openChannelMutation.isPending ? "Opening..." : "Open Channel"
+              ]
+            }
+          )
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "bg-card border-border", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader, { className: "pb-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(CardTitle, { className: "text-base font-display flex items-center gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(GitMerge, { className: "h-4 w-4 text-primary" }),
+            "Join Channel"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CardDescription, { children: "Party B joins an open channel and optionally locks additional funds." })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "space-y-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-4 sm:grid-cols-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "join-channel-id", children: "Channel ID" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "join-channel-id",
+                  "data-ocid": "channel.join_channel_id_input",
+                  placeholder: "Channel ID",
+                  value: joinChannelForm.channelId,
+                  onChange: (e) => setJoinChannelForm((f2) => ({
+                    ...f2,
+                    channelId: e.target.value
+                  })),
+                  className: "font-mono"
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "join-party-b", children: "Party B" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "join-party-b",
+                  "data-ocid": "channel.join_party_b_input",
+                  placeholder: "Your LXMF hash",
+                  value: joinChannelForm.partyB,
+                  onChange: (e) => setJoinChannelForm((f2) => ({
+                    ...f2,
+                    partyB: e.target.value
+                  })),
+                  className: "font-mono"
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "join-amount-b", children: "Amount B (can be 0)" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "join-amount-b",
+                  "data-ocid": "channel.join_amount_b_input",
+                  type: "number",
+                  placeholder: "0",
+                  value: joinChannelForm.amountB,
+                  onChange: (e) => setJoinChannelForm((f2) => ({
+                    ...f2,
+                    amountB: e.target.value
+                  }))
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "join-signature", children: "Signature (hex)" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "join-signature",
+                  "data-ocid": "channel.join_signature_input",
+                  placeholder: "Ed25519 signature",
+                  value: joinChannelForm.signature,
+                  onChange: (e) => setJoinChannelForm((f2) => ({
+                    ...f2,
+                    signature: e.target.value
+                  })),
+                  className: "font-mono"
+                }
+              )
+            ] })
+          ] }),
+          joinChannelForm.channelId && joinChannelForm.partyB && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-md border bg-muted/30 p-3 space-y-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-medium text-foreground", children: "Message to sign:" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("code", { className: "block text-xs font-mono text-muted-foreground break-all", children: [
+              joinChannelForm.channelId,
+              "|",
+              joinChannelForm.partyB,
+              "|",
+              joinChannelForm.amountB || "0"
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              "data-ocid": "channel.join_button",
+              onClick: handleJoinChannel,
+              disabled: joinChannelMutation.isPending || !joinChannelForm.channelId || !joinChannelForm.partyB || !joinChannelForm.signature,
+              className: "gap-2",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(GitMerge, { className: "h-4 w-4" }),
+                joinChannelMutation.isPending ? "Joining..." : "Join Channel"
+              ]
+            }
+          )
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "bg-card border-border", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader, { className: "pb-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(CardTitle, { className: "text-base font-display flex items-center gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(CircleX, { className: "h-4 w-4 text-primary" }),
+            "Close Channel (Cooperative)"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CardDescription, { children: "Both parties sign the final balance split to close the channel." })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "space-y-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-4 sm:grid-cols-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "close-channel-id", children: "Channel ID" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "close-channel-id",
+                  "data-ocid": "channel.close_channel_id_input",
+                  placeholder: "Channel ID",
+                  value: closeChannelForm.channelId,
+                  onChange: (e) => setCloseChannelForm((f2) => ({
+                    ...f2,
+                    channelId: e.target.value
+                  })),
+                  className: "font-mono"
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "close-balance-a", children: "Final Balance A" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "close-balance-a",
+                  "data-ocid": "channel.close_balance_a_input",
+                  type: "number",
+                  placeholder: "Final amount for party A",
+                  value: closeChannelForm.finalBalanceA,
+                  onChange: (e) => setCloseChannelForm((f2) => ({
+                    ...f2,
+                    finalBalanceA: e.target.value
+                  }))
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "close-balance-b", children: "Final Balance B" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "close-balance-b",
+                  "data-ocid": "channel.close_balance_b_input",
+                  type: "number",
+                  placeholder: "Final amount for party B",
+                  value: closeChannelForm.finalBalanceB,
+                  onChange: (e) => setCloseChannelForm((f2) => ({
+                    ...f2,
+                    finalBalanceB: e.target.value
+                  }))
+                }
+              )
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-4 sm:grid-cols-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "close-sig-a", children: "Signature A (hex)" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "close-sig-a",
+                  "data-ocid": "channel.close_sig_a_input",
+                  placeholder: "Party A Ed25519 signature",
+                  value: closeChannelForm.sigA,
+                  onChange: (e) => setCloseChannelForm((f2) => ({ ...f2, sigA: e.target.value })),
+                  className: "font-mono"
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "close-sig-b", children: "Signature B (hex)" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "close-sig-b",
+                  "data-ocid": "channel.close_sig_b_input",
+                  placeholder: "Party B Ed25519 signature",
+                  value: closeChannelForm.sigB,
+                  onChange: (e) => setCloseChannelForm((f2) => ({ ...f2, sigB: e.target.value })),
+                  className: "font-mono"
+                }
+              )
+            ] })
+          ] }),
+          closeChannelForm.channelId && closeChannelForm.finalBalanceA && closeChannelForm.finalBalanceB && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-md border bg-muted/30 p-3 space-y-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-medium text-foreground", children: "Message to sign (both parties):" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("code", { className: "block text-xs font-mono text-muted-foreground break-all", children: [
+              closeChannelForm.channelId,
+              "|",
+              closeChannelForm.finalBalanceA,
+              "|",
+              closeChannelForm.finalBalanceB
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              "data-ocid": "channel.close_button",
+              onClick: handleCloseChannel,
+              disabled: closeChannelMutation.isPending || !closeChannelForm.channelId || !closeChannelForm.finalBalanceA || !closeChannelForm.finalBalanceB || !closeChannelForm.sigA || !closeChannelForm.sigB,
+              className: "gap-2",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(CircleX, { className: "h-4 w-4" }),
+                closeChannelMutation.isPending ? "Closing..." : "Close Channel"
+              ]
+            }
+          )
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { className: "bg-card border-border overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx(CardContent, { className: "p-0", children: channelsLoading ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6 space-y-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-8 w-full" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-8 w-full" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-8 w-full" })
+      ] }) : channels && channels.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "ID" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Party A" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Party B" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Locked A" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Locked B" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Status" })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: channels.map((ch, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          TableRow,
+          {
+            "data-ocid": `channel.item.${idx + 1}`,
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "font-mono text-xs", children: truncateHash(ch.id, 6) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "font-mono text-xs", children: truncateHash(ch.partyA, 6) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "font-mono text-xs", children: truncateHash(ch.partyB, 6) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: formatBalance(ch.lockedA) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: formatBalance(ch.lockedB) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: channelStatusBadge(ch.status) })
+            ]
+          },
+          `channel-${ch.id}`
+        )) })
+      ] }) }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          className: "flex flex-col items-center justify-center py-12 text-muted-foreground",
+          "data-ocid": "channel.empty_state",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeftRight, { className: "h-10 w-10 mb-3 opacity-40" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm", children: "No channels found for this address." }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs", children: "Open a channel above to get started." })
+          ]
+        }
+      ) }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Separator, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "space-y-4", children: [

@@ -1,4 +1,4 @@
-import { createActor } from "@/backend";
+import { type ChannelRecord, ChannelStatus, createActor } from "@/backend";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -200,6 +200,141 @@ export function useRefundHTLC() {
     onError: (error) => {
       toast.error(
         `Refund failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    },
+  });
+}
+
+export function useListChannels(lxmfHash: string) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<ChannelRecord[]>({
+    queryKey: ["channels", lxmfHash],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.listChannelsForAddress(lxmfHash);
+    },
+    enabled: !!actor && !isFetching && lxmfHash.length > 0,
+    refetchInterval: 5000,
+  });
+}
+
+export function useGetChannel(channelId: string) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<ChannelRecord | null>({
+    queryKey: ["channel", channelId],
+    queryFn: async () => {
+      if (!actor) return null;
+      return actor.getChannel(channelId);
+    },
+    enabled: !!actor && !isFetching && channelId.length > 0,
+    refetchInterval: 5000,
+  });
+}
+
+export function useOpenChannel() {
+  const { actor } = useActor(createActor);
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (params: {
+      partyA: string;
+      partyB: string;
+      amountA: bigint;
+      signature: string;
+    }) => {
+      if (!actor) throw new Error("Actor not available");
+      return actor.openChannel(
+        params.partyA,
+        params.partyB,
+        params.amountA,
+        params.signature,
+      );
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["channels", variables.partyA],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["channels", variables.partyB],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["balance", variables.partyA],
+      });
+      queryClient.invalidateQueries({ queryKey: ["eventLog"] });
+      toast.success("Channel opened successfully");
+    },
+    onError: (error) => {
+      toast.error(
+        `Open channel failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    },
+  });
+}
+
+export function useJoinChannel() {
+  const { actor } = useActor(createActor);
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (params: {
+      channelId: string;
+      partyB: string;
+      amountB: bigint;
+      signature: string;
+    }) => {
+      if (!actor) throw new Error("Actor not available");
+      return actor.joinChannel(
+        params.channelId,
+        params.partyB,
+        params.amountB,
+        params.signature,
+      );
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["channels", variables.partyB],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["balance", variables.partyB],
+      });
+      queryClient.invalidateQueries({ queryKey: ["eventLog"] });
+      toast.success("Channel joined successfully");
+    },
+    onError: (error) => {
+      toast.error(
+        `Join channel failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    },
+  });
+}
+
+export function useCloseChannelCooperative() {
+  const { actor } = useActor(createActor);
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (params: {
+      channelId: string;
+      finalBalanceA: bigint;
+      finalBalanceB: bigint;
+      sigA: string;
+      sigB: string;
+    }) => {
+      if (!actor) throw new Error("Actor not available");
+      return actor.closeChannelCooperative(
+        params.channelId,
+        params.finalBalanceA,
+        params.finalBalanceB,
+        params.sigA,
+        params.sigB,
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["channels"] });
+      queryClient.invalidateQueries({ queryKey: ["balance"] });
+      queryClient.invalidateQueries({ queryKey: ["eventLog"] });
+      toast.success("Channel closed cooperatively");
+    },
+    onError: (error) => {
+      toast.error(
+        `Close channel failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     },
   });

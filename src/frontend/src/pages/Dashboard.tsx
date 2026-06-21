@@ -1,4 +1,4 @@
-import { HtlcStatus } from "@/backend";
+import { ChannelStatus, HtlcStatus } from "@/backend";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,26 +31,36 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  useCloseChannelCooperative,
   useDeposit,
   useEventLog,
   useGetBalance,
+  useGetChannel,
   useGetRegisteredPublicKey,
+  useJoinChannel,
+  useListChannels,
   useListHTLCs,
   useLockHTLC,
+  useOpenChannel,
   useRefundHTLC,
   useRegisterPublicKey,
   useReleaseHTLC,
 } from "@/hooks/useQueries";
 import {
   Activity,
+  ArrowLeftRight,
   Coins,
   Droplets,
+  GitBranch,
+  GitMerge,
+  GitPullRequest,
   KeyRound,
   Lock,
   RefreshCw,
   ShieldCheck,
   Unlock,
   Wallet,
+  XCircle,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -102,12 +112,17 @@ export default function Dashboard() {
 
   const { data: balance, isLoading: balanceLoading } = useGetBalance(lxmfHash);
   const { data: htlcs, isLoading: htlcsLoading } = useListHTLCs(lxmfHash);
+  const { data: channels, isLoading: channelsLoading } =
+    useListChannels(lxmfHash);
   const { data: events, isLoading: eventsLoading } = useEventLog();
 
   const depositMutation = useDeposit();
   const lockMutation = useLockHTLC();
   const releaseMutation = useReleaseHTLC();
   const refundMutation = useRefundHTLC();
+  const openChannelMutation = useOpenChannel();
+  const joinChannelMutation = useJoinChannel();
+  const closeChannelMutation = useCloseChannelCooperative();
 
   const [lockForm, setLockForm] = useState({
     sender: "",
@@ -116,6 +131,28 @@ export default function Dashboard() {
     paymentHash: "",
     expiry: "300",
     signature: "",
+  });
+
+  const [openChannelForm, setOpenChannelForm] = useState({
+    partyA: "",
+    partyB: "",
+    amountA: "",
+    signature: "",
+  });
+
+  const [joinChannelForm, setJoinChannelForm] = useState({
+    channelId: "",
+    partyB: "",
+    amountB: "",
+    signature: "",
+  });
+
+  const [closeChannelForm, setCloseChannelForm] = useState({
+    channelId: "",
+    finalBalanceA: "",
+    finalBalanceB: "",
+    sigA: "",
+    sigB: "",
   });
 
   const [publicKeyForm, setPublicKeyForm] = useState({
@@ -172,6 +209,82 @@ export default function Dashboard() {
   const handleRefund = (htlcId: string) => {
     refundMutation.mutate({ htlcId, lxmfHash });
   };
+
+  const handleOpenChannel = () => {
+    if (
+      !openChannelForm.partyA ||
+      !openChannelForm.partyB ||
+      !openChannelForm.amountA ||
+      !openChannelForm.signature
+    )
+      return;
+    openChannelMutation.mutate({
+      partyA: openChannelForm.partyA,
+      partyB: openChannelForm.partyB,
+      amountA: BigInt(openChannelForm.amountA),
+      signature: openChannelForm.signature,
+    });
+  };
+
+  const handleJoinChannel = () => {
+    if (
+      !joinChannelForm.channelId ||
+      !joinChannelForm.partyB ||
+      !joinChannelForm.signature
+    )
+      return;
+    joinChannelMutation.mutate({
+      channelId: joinChannelForm.channelId,
+      partyB: joinChannelForm.partyB,
+      amountB: BigInt(joinChannelForm.amountB || "0"),
+      signature: joinChannelForm.signature,
+    });
+  };
+
+  const handleCloseChannel = () => {
+    if (
+      !closeChannelForm.channelId ||
+      !closeChannelForm.finalBalanceA ||
+      !closeChannelForm.finalBalanceB ||
+      !closeChannelForm.sigA ||
+      !closeChannelForm.sigB
+    )
+      return;
+    closeChannelMutation.mutate({
+      channelId: closeChannelForm.channelId,
+      finalBalanceA: BigInt(closeChannelForm.finalBalanceA),
+      finalBalanceB: BigInt(closeChannelForm.finalBalanceB),
+      sigA: closeChannelForm.sigA,
+      sigB: closeChannelForm.sigB,
+    });
+  };
+
+  function channelStatusBadge(status: ChannelStatus) {
+    switch (status) {
+      case ChannelStatus.Open:
+        return (
+          <Badge
+            variant="outline"
+            className="text-success border-success/30 bg-success/10 gap-1"
+          >
+            <GitBranch className="h-3 w-3" />
+            Open
+          </Badge>
+        );
+      case ChannelStatus.Closed:
+        return (
+          <Badge
+            variant="outline"
+            className="text-muted-foreground border-muted-foreground/30 bg-muted/10 gap-1"
+          >
+            <XCircle className="h-3 w-3" />
+            Closed
+          </Badge>
+        );
+      default:
+        return <Badge variant="outline">Unknown</Badge>;
+    }
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
@@ -479,6 +592,413 @@ export default function Dashboard() {
               <Lock className="h-4 w-4" />
               {lockMutation.isPending ? "Locking..." : "Lock HTLC"}
             </Button>
+          </CardContent>
+        </Card>
+      </section>
+
+      <Separator />
+
+      {/* Channels Panel */}
+      <section className="space-y-4">
+        <h2 className="font-display text-xl font-semibold text-foreground flex items-center gap-2">
+          <ArrowLeftRight className="h-5 w-5 text-primary" />
+          Payment Channels
+        </h2>
+
+        {/* Open Channel Form */}
+        <Card className="bg-card border-border">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-display flex items-center gap-2">
+              <GitPullRequest className="h-4 w-4 text-primary" />
+              Open Channel
+            </CardTitle>
+            <CardDescription>
+              Lock funds from partyA to open a new channel with partyB.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="open-party-a">Party A (opener)</Label>
+                <Input
+                  id="open-party-a"
+                  data-ocid="channel.open_party_a_input"
+                  placeholder="LXMF hash"
+                  value={openChannelForm.partyA}
+                  onChange={(e) =>
+                    setOpenChannelForm((f) => ({
+                      ...f,
+                      partyA: e.target.value,
+                    }))
+                  }
+                  className="font-mono"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="open-party-b">Party B (counterparty)</Label>
+                <Input
+                  id="open-party-b"
+                  data-ocid="channel.open_party_b_input"
+                  placeholder="LXMF hash"
+                  value={openChannelForm.partyB}
+                  onChange={(e) =>
+                    setOpenChannelForm((f) => ({
+                      ...f,
+                      partyB: e.target.value,
+                    }))
+                  }
+                  className="font-mono"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="open-amount-a">Amount A</Label>
+                <Input
+                  id="open-amount-a"
+                  data-ocid="channel.open_amount_a_input"
+                  type="number"
+                  placeholder="Amount to lock"
+                  value={openChannelForm.amountA}
+                  onChange={(e) =>
+                    setOpenChannelForm((f) => ({
+                      ...f,
+                      amountA: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="open-signature">Signature (hex)</Label>
+                <Input
+                  id="open-signature"
+                  data-ocid="channel.open_signature_input"
+                  placeholder="Ed25519 signature"
+                  value={openChannelForm.signature}
+                  onChange={(e) =>
+                    setOpenChannelForm((f) => ({
+                      ...f,
+                      signature: e.target.value,
+                    }))
+                  }
+                  className="font-mono"
+                />
+              </div>
+            </div>
+            {openChannelForm.partyA &&
+              openChannelForm.partyB &&
+              openChannelForm.amountA && (
+                <div className="rounded-md border bg-muted/30 p-3 space-y-1">
+                  <p className="text-xs font-medium text-foreground">
+                    Message to sign:
+                  </p>
+                  <code className="block text-xs font-mono text-muted-foreground break-all">
+                    {openChannelForm.partyA}|{openChannelForm.partyB}|
+                    {openChannelForm.amountA}
+                  </code>
+                </div>
+              )}
+            <Button
+              data-ocid="channel.open_button"
+              onClick={handleOpenChannel}
+              disabled={
+                openChannelMutation.isPending ||
+                !openChannelForm.partyA ||
+                !openChannelForm.partyB ||
+                !openChannelForm.amountA ||
+                !openChannelForm.signature
+              }
+              className="gap-2"
+            >
+              <GitPullRequest className="h-4 w-4" />
+              {openChannelMutation.isPending ? "Opening..." : "Open Channel"}
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Join Channel Form */}
+        <Card className="bg-card border-border">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-display flex items-center gap-2">
+              <GitMerge className="h-4 w-4 text-primary" />
+              Join Channel
+            </CardTitle>
+            <CardDescription>
+              Party B joins an open channel and optionally locks additional
+              funds.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="join-channel-id">Channel ID</Label>
+                <Input
+                  id="join-channel-id"
+                  data-ocid="channel.join_channel_id_input"
+                  placeholder="Channel ID"
+                  value={joinChannelForm.channelId}
+                  onChange={(e) =>
+                    setJoinChannelForm((f) => ({
+                      ...f,
+                      channelId: e.target.value,
+                    }))
+                  }
+                  className="font-mono"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="join-party-b">Party B</Label>
+                <Input
+                  id="join-party-b"
+                  data-ocid="channel.join_party_b_input"
+                  placeholder="Your LXMF hash"
+                  value={joinChannelForm.partyB}
+                  onChange={(e) =>
+                    setJoinChannelForm((f) => ({
+                      ...f,
+                      partyB: e.target.value,
+                    }))
+                  }
+                  className="font-mono"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="join-amount-b">Amount B (can be 0)</Label>
+                <Input
+                  id="join-amount-b"
+                  data-ocid="channel.join_amount_b_input"
+                  type="number"
+                  placeholder="0"
+                  value={joinChannelForm.amountB}
+                  onChange={(e) =>
+                    setJoinChannelForm((f) => ({
+                      ...f,
+                      amountB: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="join-signature">Signature (hex)</Label>
+                <Input
+                  id="join-signature"
+                  data-ocid="channel.join_signature_input"
+                  placeholder="Ed25519 signature"
+                  value={joinChannelForm.signature}
+                  onChange={(e) =>
+                    setJoinChannelForm((f) => ({
+                      ...f,
+                      signature: e.target.value,
+                    }))
+                  }
+                  className="font-mono"
+                />
+              </div>
+            </div>
+            {joinChannelForm.channelId && joinChannelForm.partyB && (
+              <div className="rounded-md border bg-muted/30 p-3 space-y-1">
+                <p className="text-xs font-medium text-foreground">
+                  Message to sign:
+                </p>
+                <code className="block text-xs font-mono text-muted-foreground break-all">
+                  {joinChannelForm.channelId}|{joinChannelForm.partyB}|
+                  {joinChannelForm.amountB || "0"}
+                </code>
+              </div>
+            )}
+            <Button
+              data-ocid="channel.join_button"
+              onClick={handleJoinChannel}
+              disabled={
+                joinChannelMutation.isPending ||
+                !joinChannelForm.channelId ||
+                !joinChannelForm.partyB ||
+                !joinChannelForm.signature
+              }
+              className="gap-2"
+            >
+              <GitMerge className="h-4 w-4" />
+              {joinChannelMutation.isPending ? "Joining..." : "Join Channel"}
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Cooperative Close Form */}
+        <Card className="bg-card border-border">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-display flex items-center gap-2">
+              <XCircle className="h-4 w-4 text-primary" />
+              Close Channel (Cooperative)
+            </CardTitle>
+            <CardDescription>
+              Both parties sign the final balance split to close the channel.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="close-channel-id">Channel ID</Label>
+                <Input
+                  id="close-channel-id"
+                  data-ocid="channel.close_channel_id_input"
+                  placeholder="Channel ID"
+                  value={closeChannelForm.channelId}
+                  onChange={(e) =>
+                    setCloseChannelForm((f) => ({
+                      ...f,
+                      channelId: e.target.value,
+                    }))
+                  }
+                  className="font-mono"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="close-balance-a">Final Balance A</Label>
+                <Input
+                  id="close-balance-a"
+                  data-ocid="channel.close_balance_a_input"
+                  type="number"
+                  placeholder="Final amount for party A"
+                  value={closeChannelForm.finalBalanceA}
+                  onChange={(e) =>
+                    setCloseChannelForm((f) => ({
+                      ...f,
+                      finalBalanceA: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="close-balance-b">Final Balance B</Label>
+                <Input
+                  id="close-balance-b"
+                  data-ocid="channel.close_balance_b_input"
+                  type="number"
+                  placeholder="Final amount for party B"
+                  value={closeChannelForm.finalBalanceB}
+                  onChange={(e) =>
+                    setCloseChannelForm((f) => ({
+                      ...f,
+                      finalBalanceB: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="close-sig-a">Signature A (hex)</Label>
+                <Input
+                  id="close-sig-a"
+                  data-ocid="channel.close_sig_a_input"
+                  placeholder="Party A Ed25519 signature"
+                  value={closeChannelForm.sigA}
+                  onChange={(e) =>
+                    setCloseChannelForm((f) => ({ ...f, sigA: e.target.value }))
+                  }
+                  className="font-mono"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="close-sig-b">Signature B (hex)</Label>
+                <Input
+                  id="close-sig-b"
+                  data-ocid="channel.close_sig_b_input"
+                  placeholder="Party B Ed25519 signature"
+                  value={closeChannelForm.sigB}
+                  onChange={(e) =>
+                    setCloseChannelForm((f) => ({ ...f, sigB: e.target.value }))
+                  }
+                  className="font-mono"
+                />
+              </div>
+            </div>
+            {closeChannelForm.channelId &&
+              closeChannelForm.finalBalanceA &&
+              closeChannelForm.finalBalanceB && (
+                <div className="rounded-md border bg-muted/30 p-3 space-y-1">
+                  <p className="text-xs font-medium text-foreground">
+                    Message to sign (both parties):
+                  </p>
+                  <code className="block text-xs font-mono text-muted-foreground break-all">
+                    {closeChannelForm.channelId}|
+                    {closeChannelForm.finalBalanceA}|
+                    {closeChannelForm.finalBalanceB}
+                  </code>
+                </div>
+              )}
+            <Button
+              data-ocid="channel.close_button"
+              onClick={handleCloseChannel}
+              disabled={
+                closeChannelMutation.isPending ||
+                !closeChannelForm.channelId ||
+                !closeChannelForm.finalBalanceA ||
+                !closeChannelForm.finalBalanceB ||
+                !closeChannelForm.sigA ||
+                !closeChannelForm.sigB
+              }
+              className="gap-2"
+            >
+              <XCircle className="h-4 w-4" />
+              {closeChannelMutation.isPending ? "Closing..." : "Close Channel"}
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Channel List */}
+        <Card className="bg-card border-border overflow-hidden">
+          <CardContent className="p-0">
+            {channelsLoading ? (
+              <div className="p-6 space-y-2">
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+              </div>
+            ) : channels && channels.length > 0 ? (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>ID</TableHead>
+                      <TableHead>Party A</TableHead>
+                      <TableHead>Party B</TableHead>
+                      <TableHead>Locked A</TableHead>
+                      <TableHead>Locked B</TableHead>
+                      <TableHead>Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {channels.map((ch, idx) => (
+                      <TableRow
+                        key={`channel-${ch.id}`}
+                        data-ocid={`channel.item.${idx + 1}`}
+                      >
+                        <TableCell className="font-mono text-xs">
+                          {truncateHash(ch.id, 6)}
+                        </TableCell>
+                        <TableCell className="font-mono text-xs">
+                          {truncateHash(ch.partyA, 6)}
+                        </TableCell>
+                        <TableCell className="font-mono text-xs">
+                          {truncateHash(ch.partyB, 6)}
+                        </TableCell>
+                        <TableCell>{formatBalance(ch.lockedA)}</TableCell>
+                        <TableCell>{formatBalance(ch.lockedB)}</TableCell>
+                        <TableCell>{channelStatusBadge(ch.status)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ) : (
+              <div
+                className="flex flex-col items-center justify-center py-12 text-muted-foreground"
+                data-ocid="channel.empty_state"
+              >
+                <ArrowLeftRight className="h-10 w-10 mb-3 opacity-40" />
+                <p className="text-sm">No channels found for this address.</p>
+                <p className="text-xs">Open a channel above to get started.</p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </section>

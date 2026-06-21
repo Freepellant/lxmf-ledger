@@ -89,7 +89,6 @@ export class ExternalBlob {
         return this;
     }
 }
-export type LxmfHash = string;
 export type Timestamp = bigint;
 export interface HtlcRecord {
     id: HtlcId;
@@ -100,8 +99,22 @@ export interface HtlcRecord {
     expiry: Timestamp;
     amount: bigint;
 }
-export type EventLogEntry = string;
+export type ChannelId = string;
 export type HtlcId = string;
+export interface ChannelRecord {
+    id: ChannelId;
+    status: ChannelStatus;
+    lockedA: bigint;
+    lockedB: bigint;
+    partyA: LxmfHash;
+    partyB: LxmfHash;
+}
+export type LxmfHash = string;
+export type EventLogEntry = string;
+export enum ChannelStatus {
+    Open = "Open",
+    Closed = "Closed"
+}
 export enum HtlcStatus {
     Refunded = "Refunded",
     Released = "Released",
@@ -109,21 +122,28 @@ export enum HtlcStatus {
 }
 export interface backendInterface {
     __balances(): Promise<any>;
+    __channels(): Promise<any>;
     __eventLog(io: bigint | null, count: bigint | null): Promise<Array<EventLogEntry>>;
     __htlcs(): Promise<any>;
+    __nextChannelId(): Promise<any>;
     __nextHtlcId(): Promise<any>;
     __publicKeys(): Promise<any>;
+    closeChannelCooperative(channelId: ChannelId, finalBalanceA: bigint, finalBalanceB: bigint, sigA: string, sigB: string): Promise<void>;
     deposit(lxmfHash: LxmfHash, amount: bigint): Promise<void>;
     getBalance(lxmfHash: LxmfHash): Promise<bigint>;
+    getChannel(channelId: ChannelId): Promise<ChannelRecord | null>;
     getHTLC(htlcId: HtlcId): Promise<HtlcRecord | null>;
     getRegisteredPublicKey(lxmfHash: LxmfHash): Promise<string | null>;
+    joinChannel(channelId: ChannelId, partyB: LxmfHash, amountB: bigint, signature: string): Promise<void>;
+    listChannelsForAddress(lxmfHash: LxmfHash): Promise<Array<ChannelRecord>>;
     listHTLCsForAddress(lxmfHash: LxmfHash): Promise<Array<HtlcRecord>>;
     lockHTLC(senderLxmfHash: LxmfHash, receiverLxmfHash: LxmfHash, amount: bigint, paymentHash: string, expirySeconds: bigint, signature: string): Promise<HtlcId>;
+    openChannel(partyA: LxmfHash, partyB: LxmfHash, amountA: bigint, signature: string): Promise<ChannelId>;
     refundHTLC(htlcId: HtlcId): Promise<void>;
     registerPublicKey(lxmfHash: LxmfHash, publicKeyHex: string): Promise<void>;
     releaseHTLC(htlcId: HtlcId, preimage: string): Promise<void>;
 }
-import type { HtlcId as _HtlcId, HtlcRecord as _HtlcRecord, HtlcStatus as _HtlcStatus, LxmfHash as _LxmfHash, Timestamp as _Timestamp } from "./declarations/backend.did.d.ts";
+import type { ChannelId as _ChannelId, ChannelRecord as _ChannelRecord, ChannelStatus as _ChannelStatus, HtlcId as _HtlcId, HtlcRecord as _HtlcRecord, HtlcStatus as _HtlcStatus, LxmfHash as _LxmfHash, Timestamp as _Timestamp } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async __balances(): Promise<any> {
@@ -137,6 +157,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.__balances();
+            return result;
+        }
+    }
+    async __channels(): Promise<any> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.__channels();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.__channels();
             return result;
         }
     }
@@ -168,6 +202,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async __nextChannelId(): Promise<any> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.__nextChannelId();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.__nextChannelId();
+            return result;
+        }
+    }
     async __nextHtlcId(): Promise<any> {
         if (this.processError) {
             try {
@@ -193,6 +241,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.__publicKeys();
+            return result;
+        }
+    }
+    async closeChannelCooperative(arg0: ChannelId, arg1: bigint, arg2: bigint, arg3: string, arg4: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.closeChannelCooperative(arg0, arg1, arg2, arg3, arg4);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.closeChannelCooperative(arg0, arg1, arg2, arg3, arg4);
             return result;
         }
     }
@@ -224,46 +286,88 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async getHTLC(arg0: HtlcId): Promise<HtlcRecord | null> {
+    async getChannel(arg0: ChannelId): Promise<ChannelRecord | null> {
         if (this.processError) {
             try {
-                const result = await this.actor.getHTLC(arg0);
+                const result = await this.actor.getChannel(arg0);
                 return from_candid_opt_n2(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.getHTLC(arg0);
+            const result = await this.actor.getChannel(arg0);
             return from_candid_opt_n2(this._uploadFile, this._downloadFile, result);
         }
     }
-    async getRegisteredPublicKey(arg0: LxmfHash): Promise<string | null> {
+    async getHTLC(arg0: HtlcId): Promise<HtlcRecord | null> {
         if (this.processError) {
             try {
-                const result = await this.actor.getRegisteredPublicKey(arg0);
+                const result = await this.actor.getHTLC(arg0);
                 return from_candid_opt_n7(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.getRegisteredPublicKey(arg0);
+            const result = await this.actor.getHTLC(arg0);
             return from_candid_opt_n7(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getRegisteredPublicKey(arg0: LxmfHash): Promise<string | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getRegisteredPublicKey(arg0);
+                return from_candid_opt_n12(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getRegisteredPublicKey(arg0);
+            return from_candid_opt_n12(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async joinChannel(arg0: ChannelId, arg1: LxmfHash, arg2: bigint, arg3: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.joinChannel(arg0, arg1, arg2, arg3);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.joinChannel(arg0, arg1, arg2, arg3);
+            return result;
+        }
+    }
+    async listChannelsForAddress(arg0: LxmfHash): Promise<Array<ChannelRecord>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.listChannelsForAddress(arg0);
+                return from_candid_vec_n13(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.listChannelsForAddress(arg0);
+            return from_candid_vec_n13(this._uploadFile, this._downloadFile, result);
         }
     }
     async listHTLCsForAddress(arg0: LxmfHash): Promise<Array<HtlcRecord>> {
         if (this.processError) {
             try {
                 const result = await this.actor.listHTLCsForAddress(arg0);
-                return from_candid_vec_n8(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n14(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.listHTLCsForAddress(arg0);
-            return from_candid_vec_n8(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n14(this._uploadFile, this._downloadFile, result);
         }
     }
     async lockHTLC(arg0: LxmfHash, arg1: LxmfHash, arg2: bigint, arg3: string, arg4: bigint, arg5: string): Promise<HtlcId> {
@@ -277,6 +381,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5);
+            return result;
+        }
+    }
+    async openChannel(arg0: LxmfHash, arg1: LxmfHash, arg2: bigint, arg3: string): Promise<ChannelId> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.openChannel(arg0, arg1, arg2, arg3);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.openChannel(arg0, arg1, arg2, arg3);
             return result;
         }
     }
@@ -323,19 +441,52 @@ export class Backend implements backendInterface {
         }
     }
 }
-function from_candid_HtlcRecord_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _HtlcRecord): HtlcRecord {
+function from_candid_ChannelRecord_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ChannelRecord): ChannelRecord {
     return from_candid_record_n4(_uploadFile, _downloadFile, value);
 }
-function from_candid_HtlcStatus_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _HtlcStatus): HtlcStatus {
+function from_candid_ChannelStatus_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ChannelStatus): ChannelStatus {
     return from_candid_variant_n6(_uploadFile, _downloadFile, value);
 }
-function from_candid_opt_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_HtlcRecord]): HtlcRecord | null {
-    return value.length === 0 ? null : from_candid_HtlcRecord_n3(_uploadFile, _downloadFile, value[0]);
+function from_candid_HtlcRecord_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _HtlcRecord): HtlcRecord {
+    return from_candid_record_n9(_uploadFile, _downloadFile, value);
 }
-function from_candid_opt_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
+function from_candid_HtlcStatus_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _HtlcStatus): HtlcStatus {
+    return from_candid_variant_n11(_uploadFile, _downloadFile, value);
+}
+function from_candid_opt_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
     return value.length === 0 ? null : value[0];
 }
+function from_candid_opt_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_ChannelRecord]): ChannelRecord | null {
+    return value.length === 0 ? null : from_candid_ChannelRecord_n3(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_HtlcRecord]): HtlcRecord | null {
+    return value.length === 0 ? null : from_candid_HtlcRecord_n8(_uploadFile, _downloadFile, value[0]);
+}
 function from_candid_record_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    id: _ChannelId;
+    status: _ChannelStatus;
+    lockedA: bigint;
+    lockedB: bigint;
+    partyA: _LxmfHash;
+    partyB: _LxmfHash;
+}): {
+    id: ChannelId;
+    status: ChannelStatus;
+    lockedA: bigint;
+    lockedB: bigint;
+    partyA: LxmfHash;
+    partyB: LxmfHash;
+} {
+    return {
+        id: value.id,
+        status: from_candid_ChannelStatus_n5(_uploadFile, _downloadFile, value.status),
+        lockedA: value.lockedA,
+        lockedB: value.lockedB,
+        partyA: value.partyA,
+        partyB: value.partyB
+    };
+}
+function from_candid_record_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     id: _HtlcId;
     status: _HtlcStatus;
     senderLxmfHash: _LxmfHash;
@@ -354,7 +505,7 @@ function from_candid_record_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint
 } {
     return {
         id: value.id,
-        status: from_candid_HtlcStatus_n5(_uploadFile, _downloadFile, value.status),
+        status: from_candid_HtlcStatus_n10(_uploadFile, _downloadFile, value.status),
         senderLxmfHash: value.senderLxmfHash,
         receiverLxmfHash: value.receiverLxmfHash,
         paymentHash: value.paymentHash,
@@ -362,7 +513,7 @@ function from_candid_record_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint
         amount: value.amount
     };
 }
-function from_candid_variant_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     Refunded: null;
 } | {
     Released: null;
@@ -371,8 +522,18 @@ function from_candid_variant_n6(_uploadFile: (file: ExternalBlob) => Promise<Uin
 }): HtlcStatus {
     return "Refunded" in value ? HtlcStatus.Refunded : "Released" in value ? HtlcStatus.Released : "Locked" in value ? HtlcStatus.Locked : value;
 }
-function from_candid_vec_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_HtlcRecord>): Array<HtlcRecord> {
-    return value.map((x)=>from_candid_HtlcRecord_n3(_uploadFile, _downloadFile, x));
+function from_candid_variant_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    Open: null;
+} | {
+    Closed: null;
+}): ChannelStatus {
+    return "Open" in value ? ChannelStatus.Open : "Closed" in value ? ChannelStatus.Closed : value;
+}
+function from_candid_vec_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_ChannelRecord>): Array<ChannelRecord> {
+    return value.map((x)=>from_candid_ChannelRecord_n3(_uploadFile, _downloadFile, x));
+}
+function from_candid_vec_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_HtlcRecord>): Array<HtlcRecord> {
+    return value.map((x)=>from_candid_HtlcRecord_n8(_uploadFile, _downloadFile, x));
 }
 function to_candid_opt_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: bigint | null): [] | [bigint] {
     return value === null ? candid_none() : candid_some(value);

@@ -10,6 +10,17 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export type ChannelId = string;
+export interface ChannelRecord {
+  'id' : ChannelId,
+  'status' : ChannelStatus,
+  'lockedA' : bigint,
+  'lockedB' : bigint,
+  'partyA' : LxmfHash,
+  'partyB' : LxmfHash,
+}
+export type ChannelStatus = { 'Open' : null } |
+  { 'Closed' : null };
 export type EventLogEntry = string;
 export type HtlcId = string;
 export interface HtlcRecord {
@@ -28,22 +39,32 @@ export type LxmfHash = string;
 export type Timestamp = bigint;
 export interface _SERVICE {
   '__balances' : ActorMethod<[], any>,
+  '__channels' : ActorMethod<[], any>,
   '__eventLog' : ActorMethod<
     [[] | [bigint], [] | [bigint]],
     Array<EventLogEntry>
   >,
   '__htlcs' : ActorMethod<[], any>,
+  '__nextChannelId' : ActorMethod<[], any>,
   '__nextHtlcId' : ActorMethod<[], any>,
   '__publicKeys' : ActorMethod<[], any>,
+  'closeChannelCooperative' : ActorMethod<
+    [ChannelId, bigint, bigint, string, string],
+    undefined
+  >,
   'deposit' : ActorMethod<[LxmfHash, bigint], undefined>,
   'getBalance' : ActorMethod<[LxmfHash], bigint>,
+  'getChannel' : ActorMethod<[ChannelId], [] | [ChannelRecord]>,
   'getHTLC' : ActorMethod<[HtlcId], [] | [HtlcRecord]>,
   'getRegisteredPublicKey' : ActorMethod<[LxmfHash], [] | [string]>,
+  'joinChannel' : ActorMethod<[ChannelId, LxmfHash, bigint, string], undefined>,
+  'listChannelsForAddress' : ActorMethod<[LxmfHash], Array<ChannelRecord>>,
   'listHTLCsForAddress' : ActorMethod<[LxmfHash], Array<HtlcRecord>>,
   'lockHTLC' : ActorMethod<
     [LxmfHash, LxmfHash, bigint, string, bigint, string],
     HtlcId
   >,
+  'openChannel' : ActorMethod<[LxmfHash, LxmfHash, bigint, string], ChannelId>,
   'refundHTLC' : ActorMethod<[HtlcId], undefined>,
   'registerPublicKey' : ActorMethod<[LxmfHash, string], undefined>,
   'releaseHTLC' : ActorMethod<[HtlcId, string], undefined>,

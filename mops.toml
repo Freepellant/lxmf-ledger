@@ -9,12 +9,12 @@ args = [ "--release" ]
 [canisters.backend]
 main = "src/backend/main.mo"
 
-  [canisters.backend.check-stable]
-  path = ".old/src/backend/dist/backend.most"
+[canisters.backend.check-stable]
+path = ".old/src/backend/dist/backend.most"
 
-  [canisters.backend.migrations]
-  chain = "src/backend/migrations"
-  check-limit = 1
+[canisters.backend.migrations]
+chain = "src/backend/migrations"
+check-limit = 1
 
 [toolchain]
 moc = "1.9.0"
@@ -24,16 +24,7 @@ lintoko = "0.10.0"
 extends = true
 
 [moc]
-args = [
-  "-E=M0236,M0223,M0237,M0254",
-  "-W=M0235",
-  "-A=M0241",
-  "--default-persistent-actors",
-  "--actor-idl=src/backend/system-idl",
-  "--implicit-package=core",
-  "-no-check-ir",
-  "--generate-view-queries"
-]
+args = [ "-E=M0236,M0223,M0237,M0254", "-W=M0235", "-A=M0241", "--default-persistent-actors", "--actor-idl=src/backend/system-idl", "--implicit-package=core", "-no-check-ir", "--generate-view-queries" ]
 
 [dependencies]
 core = "2.5.0"

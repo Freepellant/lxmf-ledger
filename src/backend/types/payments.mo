@@ -18,4 +18,18 @@ module {
   };
 
   public type EventLogEntry = Text;
+
+  public type ChannelStatus = {
+    #Open;
+    #Closed;
+  };
+
+  public type ChannelRecord = {
+    id : Common.ChannelId;
+    partyA : Common.LxmfHash;
+    partyB : Common.LxmfHash;
+    lockedA : Nat;
+    lockedB : Nat;
+    status : ChannelStatus;
+  };
 };

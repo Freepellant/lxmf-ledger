@@ -9,7 +9,20 @@
 import { IDL } from '@icp-sdk/core/candid';
 
 export const EventLogEntry = IDL.Text;
+export const ChannelId = IDL.Text;
 export const LxmfHash = IDL.Text;
+export const ChannelStatus = IDL.Variant({
+  'Open' : IDL.Null,
+  'Closed' : IDL.Null,
+});
+export const ChannelRecord = IDL.Record({
+  'id' : ChannelId,
+  'status' : ChannelStatus,
+  'lockedA' : IDL.Nat,
+  'lockedB' : IDL.Nat,
+  'partyA' : LxmfHash,
+  'partyB' : LxmfHash,
+});
 export const HtlcId = IDL.Text;
 export const HtlcStatus = IDL.Variant({
   'Refunded' : IDL.Null,
@@ -29,20 +42,34 @@ export const HtlcRecord = IDL.Record({
 
 export const idlService = IDL.Service({
   '__balances' : IDL.Func([], [IDL.Reserved], ['query']),
+  '__channels' : IDL.Func([], [IDL.Reserved], ['query']),
   '__eventLog' : IDL.Func(
       [IDL.Opt(IDL.Nat), IDL.Opt(IDL.Nat)],
       [IDL.Vec(EventLogEntry)],
       ['query'],
     ),
   '__htlcs' : IDL.Func([], [IDL.Reserved], ['query']),
+  '__nextChannelId' : IDL.Func([], [IDL.Reserved], ['query']),
   '__nextHtlcId' : IDL.Func([], [IDL.Reserved], ['query']),
   '__publicKeys' : IDL.Func([], [IDL.Reserved], ['query']),
+  'closeChannelCooperative' : IDL.Func(
+      [ChannelId, IDL.Nat, IDL.Nat, IDL.Text, IDL.Text],
+      [],
+      [],
+    ),
   'deposit' : IDL.Func([LxmfHash, IDL.Nat], [], []),
   'getBalance' : IDL.Func([LxmfHash], [IDL.Nat], ['query']),
+  'getChannel' : IDL.Func([ChannelId], [IDL.Opt(ChannelRecord)], ['query']),
   'getHTLC' : IDL.Func([HtlcId], [IDL.Opt(HtlcRecord)], ['query']),
   'getRegisteredPublicKey' : IDL.Func(
       [LxmfHash],
       [IDL.Opt(IDL.Text)],
+      ['query'],
+    ),
+  'joinChannel' : IDL.Func([ChannelId, LxmfHash, IDL.Nat, IDL.Text], [], []),
+  'listChannelsForAddress' : IDL.Func(
+      [LxmfHash],
+      [IDL.Vec(ChannelRecord)],
       ['query'],
     ),
   'listHTLCsForAddress' : IDL.Func(
@@ -55,6 +82,11 @@ export const idlService = IDL.Service({
       [HtlcId],
       [],
     ),
+  'openChannel' : IDL.Func(
+      [LxmfHash, LxmfHash, IDL.Nat, IDL.Text],
+      [ChannelId],
+      [],
+    ),
   'refundHTLC' : IDL.Func([HtlcId], [], []),
   'registerPublicKey' : IDL.Func([LxmfHash, IDL.Text], [], []),
   'releaseHTLC' : IDL.Func([HtlcId, IDL.Text], [], []),
@@ -64,7 +96,17 @@ export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
   const EventLogEntry = IDL.Text;
+  const ChannelId = IDL.Text;
   const LxmfHash = IDL.Text;
+  const ChannelStatus = IDL.Variant({ 'Open' : IDL.Null, 'Closed' : IDL.Null });
+  const ChannelRecord = IDL.Record({
+    'id' : ChannelId,
+    'status' : ChannelStatus,
+    'lockedA' : IDL.Nat,
+    'lockedB' : IDL.Nat,
+    'partyA' : LxmfHash,
+    'partyB' : LxmfHash,
+  });
   const HtlcId = IDL.Text;
   const HtlcStatus = IDL.Variant({
     'Refunded' : IDL.Null,
@@ -84,20 +126,34 @@ export const idlFactory = ({ IDL }) => {
   
   return IDL.Service({
     '__balances' : IDL.Func([], [IDL.Reserved], ['query']),
+    '__channels' : IDL.Func([], [IDL.Reserved], ['query']),
     '__eventLog' : IDL.Func(
         [IDL.Opt(IDL.Nat), IDL.Opt(IDL.Nat)],
         [IDL.Vec(EventLogEntry)],
         ['query'],
       ),
     '__htlcs' : IDL.Func([], [IDL.Reserved], ['query']),
+    '__nextChannelId' : IDL.Func([], [IDL.Reserved], ['query']),
     '__nextHtlcId' : IDL.Func([], [IDL.Reserved], ['query']),
     '__publicKeys' : IDL.Func([], [IDL.Reserved], ['query']),
+    'closeChannelCooperative' : IDL.Func(
+        [ChannelId, IDL.Nat, IDL.Nat, IDL.Text, IDL.Text],
+        [],
+        [],
+      ),
     'deposit' : IDL.Func([LxmfHash, IDL.Nat], [], []),
     'getBalance' : IDL.Func([LxmfHash], [IDL.Nat], ['query']),
+    'getChannel' : IDL.Func([ChannelId], [IDL.Opt(ChannelRecord)], ['query']),
     'getHTLC' : IDL.Func([HtlcId], [IDL.Opt(HtlcRecord)], ['query']),
     'getRegisteredPublicKey' : IDL.Func(
         [LxmfHash],
         [IDL.Opt(IDL.Text)],
+        ['query'],
+      ),
+    'joinChannel' : IDL.Func([ChannelId, LxmfHash, IDL.Nat, IDL.Text], [], []),
+    'listChannelsForAddress' : IDL.Func(
+        [LxmfHash],
+        [IDL.Vec(ChannelRecord)],
         ['query'],
       ),
     'listHTLCsForAddress' : IDL.Func(
@@ -108,6 +164,11 @@ export const idlFactory = ({ IDL }) => {
     'lockHTLC' : IDL.Func(
         [LxmfHash, LxmfHash, IDL.Nat, IDL.Text, IDL.Nat, IDL.Text],
         [HtlcId],
+        [],
+      ),
+    'openChannel' : IDL.Func(
+        [LxmfHash, LxmfHash, IDL.Nat, IDL.Text],
+        [ChannelId],
         [],
       ),
     'refundHTLC' : IDL.Func([HtlcId], [], []),

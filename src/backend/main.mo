@@ -11,7 +11,9 @@ actor {
   let eventLog : List.List<Types.EventLogEntry>;
   let nextHtlcId : { var value : Nat };
   let publicKeys : Map.Map<Common.LxmfHash, Text>;
+  let channels : Map.Map<Common.ChannelId, Types.ChannelRecord>;
+  let nextChannelId : { var value : Nat };
 
   include MixinViews();
-  include PaymentsMixin(balances, htlcs, eventLog, nextHtlcId, publicKeys);
+  include PaymentsMixin(balances, htlcs, eventLog, nextHtlcId, publicKeys, channels, nextChannelId);
 };

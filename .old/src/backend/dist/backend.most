@@ -1,4 +1,15 @@
 // Version: 4.0.0
+type ChannelId__821026820 = Text;
+type ChannelRecord__151285978 =
+  {
+    id : ChannelId__821026820;
+    lockedA : Nat;
+    lockedB : Nat;
+    partyA : LxmfHash__955150002;
+    partyB : LxmfHash__955150002;
+    status : ChannelStatus__952912003
+  };
+type ChannelStatus__952912003 = {#Closed; #Open};
 type Data__80296667<K, V> =
   {var count : Nat__1040412405; kvs : [var ?(K, V)]};
 type EventLogEntry__858109921 = Text;
@@ -31,6 +42,35 @@ type Map__709709801<K, V> =
 type Map__912772452<K, V> = Map__709709801<K, V>;
 type Nat__1040412405 = Nat__920180692;
 type Nat__920180692 = Nat;
+type NewActor__261399062 =
+  {
+    balances : Map__222667396<Text, Nat>;
+    channels :
+      Map__222667396<Text,
+                      {
+                        id : Text;
+                        lockedA : Nat;
+                        lockedB : Nat;
+                        partyA : Text;
+                        partyB : Text;
+                        status : {#Closed; #Open}
+                      }>;
+    eventLog : List__560604548<Text>;
+    htlcs :
+      Map__222667396<Text,
+                      {
+                        amount : Nat;
+                        expiry : Nat;
+                        id : Text;
+                        paymentHash : Text;
+                        receiverLxmfHash : Text;
+                        senderLxmfHash : Text;
+                        status : {#Locked; #Refunded; #Released}
+                      }>;
+    nextChannelId : {var value : Nat};
+    nextHtlcId : {var value : Nat};
+    publicKeys : Map__222667396<Text, Text>
+  };
 type NewActor__894722484 =
   {
     balances : Map__222667396<Text, Nat>;
@@ -68,6 +108,24 @@ type NewActor__932940748 =
   };
 type Node__1000929467<K, V> =
   {#internal : Internal__41346355<K, V>; #leaf : Leaf__712614010<K, V>};
+type OldActor__348945453 =
+  {
+    balances : Map__222667396<Text, Nat>;
+    eventLog : List__560604548<Text>;
+    htlcs :
+      Map__222667396<Text,
+                      {
+                        amount : Nat;
+                        expiry : Nat;
+                        id : Text;
+                        paymentHash : Text;
+                        receiverLxmfHash : Text;
+                        senderLxmfHash : Text;
+                        status : {#Locked; #Refunded; #Released}
+                      }>;
+    nextHtlcId : {var value : Nat};
+    publicKeys : Map__222667396<Text, Text>
+  };
 type OldActor__349624615 =
   {
     balances : Map__222667396<Text, Nat>;
@@ -91,12 +149,20 @@ type Timestamp__301639476 = Nat;
   "20260620_000000_InitPayments" :
     (_old : OldActor__624686387) -> NewActor__932940748;
   "20260620_120000_AddPublicKeys" :
-    (old : OldActor__349624615) -> NewActor__894722484
+    (old : OldActor__349624615) -> NewActor__894722484;
+  "20260621_000000_AddChannels" :
+    (old : OldActor__348945453) -> NewActor__261399062
 }
 actor  {
   stable balances :
     {
       var root : Node__1000929467<LxmfHash__955150002, Nat>;
+      var size : Nat__1040412405
+    };
+  stable channels :
+    {
+      var root :
+        Node__1000929467<ChannelId__821026820, ChannelRecord__151285978>;
       var size : Nat__1040412405
     };
   stable eventLog :
@@ -110,6 +176,7 @@ actor  {
       var root : Node__1000929467<HtlcId__212554912, HtlcRecord__319904597>;
       var size : Nat__1040412405
     };
+  stable nextChannelId : {var value : Nat};
   stable nextHtlcId : {var value : Nat};
   stable publicKeys :
     {

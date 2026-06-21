@@ -1,20 +1,24 @@
 {
-  "overview": "A learning/demo payment ledger for Reticulum/LXMF mesh network users with balance tracking, HTLC (Hash Time Locked Contract) management, and a React dashboard.",
+  "overview": "LXMF Ledger is a learning/demo payment ledger for Reticulum/LXMF mesh network users, supporting test deposits, HTLCs, signature-based authorization, and now payment channels with cooperative close.",
   "features": [
-    "Check LXMF hash balance with auto-refresh",
-    "Test faucet to deposit demo funds",
-    "Create HTLCs with sender, receiver, amount, payment hash, and expiry",
-    "Release HTLCs by entering the correct preimage",
-    "Refund expired HTLCs automatically",
-    "Persistent event log of all ledger operations"
+    "Test faucet deposits for any LXMF hash",
+    "Hash Time Locked Contracts with SHA-256 preimage release and expiry refund",
+    "Ed25519 signature-based authorization for locking funds",
+    "Public key registration per LXMF hash",
+    "Payment channels with open, join, and cooperative close",
+    "Persistent event log of all state changes",
+    "Auto-refreshing dashboard with live message previews for offline signing"
   ],
   "category": "productivity",
   "tags": [
+    "icp",
     "ledger",
     "htlc",
-    "mesh-network",
-    "demo",
-    "icp"
+    "payment-channel",
+    "ed25519",
+    "lxmf",
+    "reticulum",
+    "demo"
   ],
-  "last_updated": "2026-06-20T03:32:28.121Z"
+  "last_updated": "2026-06-21T03:03:37.308Z"
 }
