@@ -25,7 +25,10 @@ export function Layout({ children, className }: LayoutProps) {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex items-center gap-1.5 rounded-full border bg-card px-2.5 py-1 text-[11px] font-mono font-medium text-muted-foreground">
+              v4
+            </span>
             <span className="inline-flex h-2 w-2 rounded-full bg-success animate-pulse" />
             <span className="text-xs text-muted-foreground font-mono">
               Online
