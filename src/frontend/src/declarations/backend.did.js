@@ -51,9 +51,10 @@ export const idlService = IDL.Service({
   '__htlcs' : IDL.Func([], [IDL.Reserved], ['query']),
   '__nextChannelId' : IDL.Func([], [IDL.Reserved], ['query']),
   '__nextHtlcId' : IDL.Func([], [IDL.Reserved], ['query']),
+  '__nonces' : IDL.Func([], [IDL.Reserved], ['query']),
   '__publicKeys' : IDL.Func([], [IDL.Reserved], ['query']),
   'closeChannelCooperative' : IDL.Func(
-      [ChannelId, IDL.Nat, IDL.Nat, IDL.Text, IDL.Text],
+      [ChannelId, IDL.Nat, IDL.Nat, IDL.Nat, IDL.Nat, IDL.Text, IDL.Text],
       [],
       [],
     ),
@@ -61,12 +62,17 @@ export const idlService = IDL.Service({
   'getBalance' : IDL.Func([LxmfHash], [IDL.Nat], ['query']),
   'getChannel' : IDL.Func([ChannelId], [IDL.Opt(ChannelRecord)], ['query']),
   'getHTLC' : IDL.Func([HtlcId], [IDL.Opt(HtlcRecord)], ['query']),
+  'getNonce' : IDL.Func([LxmfHash], [IDL.Nat], ['query']),
   'getRegisteredPublicKey' : IDL.Func(
       [LxmfHash],
       [IDL.Opt(IDL.Text)],
       ['query'],
     ),
-  'joinChannel' : IDL.Func([ChannelId, LxmfHash, IDL.Nat, IDL.Text], [], []),
+  'joinChannel' : IDL.Func(
+      [ChannelId, LxmfHash, IDL.Nat, IDL.Nat, IDL.Text],
+      [],
+      [],
+    ),
   'listChannelsForAddress' : IDL.Func(
       [LxmfHash],
       [IDL.Vec(ChannelRecord)],
@@ -78,12 +84,12 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'lockHTLC' : IDL.Func(
-      [LxmfHash, LxmfHash, IDL.Nat, IDL.Text, IDL.Nat, IDL.Text],
+      [LxmfHash, LxmfHash, IDL.Nat, IDL.Text, IDL.Nat, IDL.Nat, IDL.Text],
       [HtlcId],
       [],
     ),
   'openChannel' : IDL.Func(
-      [LxmfHash, LxmfHash, IDL.Nat, IDL.Text],
+      [LxmfHash, LxmfHash, IDL.Nat, IDL.Nat, IDL.Text],
       [ChannelId],
       [],
     ),
@@ -135,9 +141,10 @@ export const idlFactory = ({ IDL }) => {
     '__htlcs' : IDL.Func([], [IDL.Reserved], ['query']),
     '__nextChannelId' : IDL.Func([], [IDL.Reserved], ['query']),
     '__nextHtlcId' : IDL.Func([], [IDL.Reserved], ['query']),
+    '__nonces' : IDL.Func([], [IDL.Reserved], ['query']),
     '__publicKeys' : IDL.Func([], [IDL.Reserved], ['query']),
     'closeChannelCooperative' : IDL.Func(
-        [ChannelId, IDL.Nat, IDL.Nat, IDL.Text, IDL.Text],
+        [ChannelId, IDL.Nat, IDL.Nat, IDL.Nat, IDL.Nat, IDL.Text, IDL.Text],
         [],
         [],
       ),
@@ -145,12 +152,17 @@ export const idlFactory = ({ IDL }) => {
     'getBalance' : IDL.Func([LxmfHash], [IDL.Nat], ['query']),
     'getChannel' : IDL.Func([ChannelId], [IDL.Opt(ChannelRecord)], ['query']),
     'getHTLC' : IDL.Func([HtlcId], [IDL.Opt(HtlcRecord)], ['query']),
+    'getNonce' : IDL.Func([LxmfHash], [IDL.Nat], ['query']),
     'getRegisteredPublicKey' : IDL.Func(
         [LxmfHash],
         [IDL.Opt(IDL.Text)],
         ['query'],
       ),
-    'joinChannel' : IDL.Func([ChannelId, LxmfHash, IDL.Nat, IDL.Text], [], []),
+    'joinChannel' : IDL.Func(
+        [ChannelId, LxmfHash, IDL.Nat, IDL.Nat, IDL.Text],
+        [],
+        [],
+      ),
     'listChannelsForAddress' : IDL.Func(
         [LxmfHash],
         [IDL.Vec(ChannelRecord)],
@@ -162,12 +174,12 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'lockHTLC' : IDL.Func(
-        [LxmfHash, LxmfHash, IDL.Nat, IDL.Text, IDL.Nat, IDL.Text],
+        [LxmfHash, LxmfHash, IDL.Nat, IDL.Text, IDL.Nat, IDL.Nat, IDL.Text],
         [HtlcId],
         [],
       ),
     'openChannel' : IDL.Func(
-        [LxmfHash, LxmfHash, IDL.Nat, IDL.Text],
+        [LxmfHash, LxmfHash, IDL.Nat, IDL.Nat, IDL.Text],
         [ChannelId],
         [],
       ),

@@ -1,4 +1,5 @@
-import { type ChannelRecord, ChannelStatus, createActor } from "@/backend";
+import { ChannelStatus, createActor } from "@/backend";
+import type { ChannelRecord } from "@/backend";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -68,6 +69,19 @@ export function useDeposit() {
   });
 }
 
+export function useGetNonce(lxmfHash: string) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery<bigint>({
+    queryKey: ["nonce", lxmfHash],
+    queryFn: async () => {
+      if (!actor) return 0n;
+      return actor.getNonce(lxmfHash);
+    },
+    enabled: !!actor && !isFetching && lxmfHash.length > 0,
+    refetchInterval: 5000,
+  });
+}
+
 export function useLockHTLC() {
   const { actor } = useActor(createActor);
   const queryClient = useQueryClient();
@@ -78,6 +92,7 @@ export function useLockHTLC() {
       amount: bigint;
       paymentHash: string;
       expirySeconds: bigint;
+      nonce: bigint;
       signature: string;
     }) => {
       if (!actor) throw new Error("Actor not available");
@@ -87,6 +102,7 @@ export function useLockHTLC() {
         params.amount,
         params.paymentHash,
         params.expirySeconds,
+        params.nonce,
         params.signature,
       );
     },
@@ -99,6 +115,9 @@ export function useLockHTLC() {
       });
       queryClient.invalidateQueries({
         queryKey: ["balance", variables.senderLxmfHash],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["nonce", variables.senderLxmfHash],
       });
       queryClient.invalidateQueries({ queryKey: ["eventLog"] });
       toast.success("HTLC locked successfully");
@@ -239,6 +258,7 @@ export function useOpenChannel() {
       partyA: string;
       partyB: string;
       amountA: bigint;
+      nonce: bigint;
       signature: string;
     }) => {
       if (!actor) throw new Error("Actor not available");
@@ -246,6 +266,7 @@ export function useOpenChannel() {
         params.partyA,
         params.partyB,
         params.amountA,
+        params.nonce,
         params.signature,
       );
     },
@@ -258,6 +279,9 @@ export function useOpenChannel() {
       });
       queryClient.invalidateQueries({
         queryKey: ["balance", variables.partyA],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["nonce", variables.partyA],
       });
       queryClient.invalidateQueries({ queryKey: ["eventLog"] });
       toast.success("Channel opened successfully");
@@ -278,6 +302,7 @@ export function useJoinChannel() {
       channelId: string;
       partyB: string;
       amountB: bigint;
+      nonce: bigint;
       signature: string;
     }) => {
       if (!actor) throw new Error("Actor not available");
@@ -285,6 +310,7 @@ export function useJoinChannel() {
         params.channelId,
         params.partyB,
         params.amountB,
+        params.nonce,
         params.signature,
       );
     },
@@ -294,6 +320,9 @@ export function useJoinChannel() {
       });
       queryClient.invalidateQueries({
         queryKey: ["balance", variables.partyB],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["nonce", variables.partyB],
       });
       queryClient.invalidateQueries({ queryKey: ["eventLog"] });
       toast.success("Channel joined successfully");
@@ -314,6 +343,8 @@ export function useCloseChannelCooperative() {
       channelId: string;
       finalBalanceA: bigint;
       finalBalanceB: bigint;
+      nonceA: bigint;
+      nonceB: bigint;
       sigA: string;
       sigB: string;
     }) => {
@@ -322,6 +353,8 @@ export function useCloseChannelCooperative() {
         params.channelId,
         params.finalBalanceA,
         params.finalBalanceB,
+        params.nonceA,
+        params.nonceB,
         params.sigA,
         params.sigB,
       );
@@ -329,6 +362,7 @@ export function useCloseChannelCooperative() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["channels"] });
       queryClient.invalidateQueries({ queryKey: ["balance"] });
+      queryClient.invalidateQueries({ queryKey: ["nonce"] });
       queryClient.invalidateQueries({ queryKey: ["eventLog"] });
       toast.success("Channel closed cooperatively");
     },

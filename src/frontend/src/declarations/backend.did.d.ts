@@ -47,24 +47,32 @@ export interface _SERVICE {
   '__htlcs' : ActorMethod<[], any>,
   '__nextChannelId' : ActorMethod<[], any>,
   '__nextHtlcId' : ActorMethod<[], any>,
+  '__nonces' : ActorMethod<[], any>,
   '__publicKeys' : ActorMethod<[], any>,
   'closeChannelCooperative' : ActorMethod<
-    [ChannelId, bigint, bigint, string, string],
+    [ChannelId, bigint, bigint, bigint, bigint, string, string],
     undefined
   >,
   'deposit' : ActorMethod<[LxmfHash, bigint], undefined>,
   'getBalance' : ActorMethod<[LxmfHash], bigint>,
   'getChannel' : ActorMethod<[ChannelId], [] | [ChannelRecord]>,
   'getHTLC' : ActorMethod<[HtlcId], [] | [HtlcRecord]>,
+  'getNonce' : ActorMethod<[LxmfHash], bigint>,
   'getRegisteredPublicKey' : ActorMethod<[LxmfHash], [] | [string]>,
-  'joinChannel' : ActorMethod<[ChannelId, LxmfHash, bigint, string], undefined>,
+  'joinChannel' : ActorMethod<
+    [ChannelId, LxmfHash, bigint, bigint, string],
+    undefined
+  >,
   'listChannelsForAddress' : ActorMethod<[LxmfHash], Array<ChannelRecord>>,
   'listHTLCsForAddress' : ActorMethod<[LxmfHash], Array<HtlcRecord>>,
   'lockHTLC' : ActorMethod<
-    [LxmfHash, LxmfHash, bigint, string, bigint, string],
+    [LxmfHash, LxmfHash, bigint, string, bigint, bigint, string],
     HtlcId
   >,
-  'openChannel' : ActorMethod<[LxmfHash, LxmfHash, bigint, string], ChannelId>,
+  'openChannel' : ActorMethod<
+    [LxmfHash, LxmfHash, bigint, bigint, string],
+    ChannelId
+  >,
   'refundHTLC' : ActorMethod<[HtlcId], undefined>,
   'registerPublicKey' : ActorMethod<[LxmfHash, string], undefined>,
   'releaseHTLC' : ActorMethod<[HtlcId, string], undefined>,

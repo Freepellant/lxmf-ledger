@@ -48,41 +48,52 @@ module {
     eventLog : List.List<Types.EventLogEntry>,
     nextHtlcId : { var value : Nat },
     publicKeys : Map.Map<Common.LxmfHash, Text>,
+    nonces : Map.Map<Common.LxmfHash, Nat>,
     senderLxmfHash : Common.LxmfHash,
     receiverLxmfHash : Common.LxmfHash,
     amount : Nat,
     paymentHash : Text,
     expirySeconds : Nat,
+    nonce : Nat,
     signature : Text,
   ) : Common.HtlcId {
+    // 1. Nonce check BEFORE signature verification
+    let currentNonce = getNonce(nonces, senderLxmfHash);
+    if (nonce != currentNonce) {
+      Runtime.trap("invalid nonce - expected " # currentNonce.toText() # ", got " # nonce.toText());
+    };
+
+    // 2. Require registered public key
     let pubKeyHex = switch (publicKeys.get(senderLxmfHash)) {
       case (?pk) { pk };
       case (null) { Runtime.trap("sender has no registered public key — call registerPublicKey first") };
     };
 
-    let message = senderLxmfHash # "|" # receiverLxmfHash # "|" # amount.toText() # "|" # paymentHash # "|" # expirySeconds.toText();
+    // 3. Verify signature
+    let message = senderLxmfHash # "|" # receiverLxmfHash # "|" # amount.toText() # "|" # paymentHash # "|" # expirySeconds.toText() # "|" # nonce.toText();
     let messageBytes = message.encodeUtf8().toArray();
     let signatureBytes = Ed25519.Utils.hexToBytes(signature);
     let pubKeyBytes = Ed25519.Utils.hexToBytes(pubKeyHex);
-
-    let isValid = Ed25519.ED25519.verify(signatureBytes, messageBytes, pubKeyBytes);
-    if (not isValid) {
+    let valid = Ed25519.ED25519.verify(signatureBytes, messageBytes, pubKeyBytes);
+    if (not valid) {
       Runtime.trap("invalid signature — lock not authorized by sender");
     };
 
-    let currentBalance = getBalance(balances, senderLxmfHash);
-    if (currentBalance < amount) {
-      Runtime.trap("Insufficient balance");
+    // 4. Check balance
+    let senderBalance = getBalance(balances, senderLxmfHash);
+    if (senderBalance < amount) {
+      Runtime.trap("insufficient balance");
     };
 
-    balances.add(senderLxmfHash, currentBalance - amount);
+    // 5. Deduct balance
+    balances.add(senderLxmfHash, senderBalance - amount);
 
+    // 6. Create HTLC
     let htlcId = nextHtlcId.value.toText();
     nextHtlcId.value += 1;
-
-    let expiry = Int.abs(Time.now()) + expirySeconds * 1_000_000_000;
-
-    let record : Types.HtlcRecord = {
+    let now = Int.abs(Time.now());
+    let expiry = now + (expirySeconds * 1_000_000_000);
+    let record = {
       id = htlcId;
       senderLxmfHash;
       receiverLxmfHash;
@@ -91,13 +102,16 @@ module {
       expiry;
       status = #Locked;
     };
-
     htlcs.add(htlcId, record);
 
+    // 7. Log
     let logEntry = "HTLC locked: id=" # htlcId # " sender=" # senderLxmfHash # " receiver=" # receiverLxmfHash # " amount=" # amount.toText() # " hash=" # paymentHash # " expiry=" # expiry.toText();
     eventLog.add(logEntry);
 
-    htlcId;
+    // 8. Increment nonce only after full success
+    nonces.add(senderLxmfHash, currentNonce + 1);
+
+    htlcId
   };
 
   public func releaseHTLC(
@@ -207,37 +221,48 @@ module {
     eventLog : List.List<Types.EventLogEntry>,
     nextChannelId : { var value : Nat },
     publicKeys : Map.Map<Common.LxmfHash, Text>,
+    nonces : Map.Map<Common.LxmfHash, Nat>,
     partyA : Common.LxmfHash,
     partyB : Common.LxmfHash,
     amountA : Nat,
+    nonce : Nat,
     signature : Text,
   ) : Common.ChannelId {
+    // 1. Nonce check BEFORE signature verification
+    let currentNonce = getNonce(nonces, partyA);
+    if (nonce != currentNonce) {
+      Runtime.trap("invalid nonce - expected " # currentNonce.toText() # ", got " # nonce.toText());
+    };
+
+    // 2. Require registered public key
     let pubKeyHex = switch (publicKeys.get(partyA)) {
       case (?pk) { pk };
       case (null) { Runtime.trap("partyA has no registered public key — call registerPublicKey first") };
     };
 
-    let message = partyA # "|" # partyB # "|" # amountA.toText();
+    // 3. Verify signature
+    let message = partyA # "|" # partyB # "|" # amountA.toText() # "|" # nonce.toText();
     let messageBytes = message.encodeUtf8().toArray();
     let signatureBytes = Ed25519.Utils.hexToBytes(signature);
     let pubKeyBytes = Ed25519.Utils.hexToBytes(pubKeyHex);
-
-    let isValid = Ed25519.ED25519.verify(signatureBytes, messageBytes, pubKeyBytes);
-    if (not isValid) {
-      Runtime.trap("invalid signature — openChannel not authorized by partyA");
+    let valid = Ed25519.ED25519.verify(signatureBytes, messageBytes, pubKeyBytes);
+    if (not valid) {
+      Runtime.trap("invalid signature — open channel not authorized by partyA");
     };
 
-    let currentBalance = getBalance(balances, partyA);
-    if (currentBalance < amountA) {
-      Runtime.trap("Insufficient balance");
+    // 4. Check balance
+    let partyABalance = getBalance(balances, partyA);
+    if (partyABalance < amountA) {
+      Runtime.trap("insufficient balance");
     };
 
-    balances.add(partyA, currentBalance - amountA);
+    // 5. Deduct balance
+    balances.add(partyA, partyABalance - amountA);
 
+    // 6. Create channel
     let channelId = nextChannelId.value.toText();
     nextChannelId.value += 1;
-
-    let record : Types.ChannelRecord = {
+    let record = {
       id = channelId;
       partyA;
       partyB;
@@ -245,13 +270,16 @@ module {
       lockedB = 0;
       status = #Open;
     };
-
     channels.add(channelId, record);
 
+    // 7. Log
     let logEntry = "Channel opened: id=" # channelId # " partyA=" # partyA # " partyB=" # partyB # " lockedA=" # amountA.toText();
     eventLog.add(logEntry);
 
-    channelId;
+    // 8. Increment nonce only after full success
+    nonces.add(partyA, currentNonce + 1);
+
+    channelId
   };
 
   public func joinChannel(
@@ -259,51 +287,66 @@ module {
     channels : Map.Map<Common.ChannelId, Types.ChannelRecord>,
     eventLog : List.List<Types.EventLogEntry>,
     publicKeys : Map.Map<Common.LxmfHash, Text>,
+    nonces : Map.Map<Common.LxmfHash, Nat>,
     channelId : Common.ChannelId,
     partyB : Common.LxmfHash,
     amountB : Nat,
+    nonce : Nat,
     signature : Text,
   ) {
+    // 1. Verify channel exists and is open
     let channel = switch (channels.get(channelId)) {
-      case (?ch) { ch };
-      case (null) { Runtime.trap("Channel not found") };
+      case (?c) { c };
+      case (null) { Runtime.trap("channel not found") };
     };
-
     if (channel.status != #Open) {
-      Runtime.trap("Channel is not open");
+      Runtime.trap("channel is not open");
     };
-
     if (channel.partyB != partyB) {
-      Runtime.trap("partyB does not match the channel's stored partyB");
+      Runtime.trap("partyB does not match channel's partyB");
     };
 
+    // 2. Nonce check BEFORE signature verification
+    let currentNonce = getNonce(nonces, partyB);
+    if (nonce != currentNonce) {
+      Runtime.trap("invalid nonce - expected " # currentNonce.toText() # ", got " # nonce.toText());
+    };
+
+    // 3. Require registered public key
     let pubKeyHex = switch (publicKeys.get(partyB)) {
       case (?pk) { pk };
       case (null) { Runtime.trap("partyB has no registered public key — call registerPublicKey first") };
     };
 
-    let message = channelId # "|" # partyB # "|" # amountB.toText();
+    // 4. Verify signature
+    let message = channelId # "|" # partyB # "|" # amountB.toText() # "|" # nonce.toText();
     let messageBytes = message.encodeUtf8().toArray();
     let signatureBytes = Ed25519.Utils.hexToBytes(signature);
     let pubKeyBytes = Ed25519.Utils.hexToBytes(pubKeyHex);
-
-    let isValid = Ed25519.ED25519.verify(signatureBytes, messageBytes, pubKeyBytes);
-    if (not isValid) {
-      Runtime.trap("invalid signature — joinChannel not authorized by partyB");
+    let valid = Ed25519.ED25519.verify(signatureBytes, messageBytes, pubKeyBytes);
+    if (not valid) {
+      Runtime.trap("invalid signature — join channel not authorized by partyB");
     };
 
-    let currentBalance = getBalance(balances, partyB);
-    if (currentBalance < amountB) {
-      Runtime.trap("Insufficient balance");
+    // 5. Check balance
+    let partyBBalance = getBalance(balances, partyB);
+    if (partyBBalance < amountB) {
+      Runtime.trap("insufficient balance");
     };
 
-    balances.add(partyB, currentBalance - amountB);
+    // 6. Deduct balance
+    balances.add(partyB, partyBBalance - amountB);
 
+    // 7. Update channel
     let updated = { channel with lockedB = amountB };
     channels.add(channelId, updated);
 
+    // 8. Log
     let logEntry = "Channel joined: id=" # channelId # " partyB=" # partyB # " lockedB=" # amountB.toText();
     eventLog.add(logEntry);
+
+    // 9. Increment nonce only after full success
+    nonces.add(partyB, currentNonce + 1);
   };
 
   public func closeChannelCooperative(
@@ -311,65 +354,82 @@ module {
     channels : Map.Map<Common.ChannelId, Types.ChannelRecord>,
     eventLog : List.List<Types.EventLogEntry>,
     publicKeys : Map.Map<Common.LxmfHash, Text>,
+    nonces : Map.Map<Common.LxmfHash, Nat>,
     channelId : Common.ChannelId,
     finalBalanceA : Nat,
     finalBalanceB : Nat,
+    nonceA : Nat,
+    nonceB : Nat,
     sigA : Text,
     sigB : Text,
   ) {
+    // 1. Verify channel exists and is open
     let channel = switch (channels.get(channelId)) {
-      case (?ch) { ch };
-      case (null) { Runtime.trap("Channel not found") };
+      case (?c) { c };
+      case (null) { Runtime.trap("channel not found") };
     };
-
     if (channel.status != #Open) {
-      Runtime.trap("Channel is not open");
+      Runtime.trap("channel is not open");
     };
 
+    // 2. Verify final balances sum to total locked
     let totalLocked = channel.lockedA + channel.lockedB;
     if (finalBalanceA + finalBalanceB != totalLocked) {
       Runtime.trap("final balances must sum to total locked funds");
     };
 
-    let pubKeyA = switch (publicKeys.get(channel.partyA)) {
+    // 3. Dual nonce check BEFORE any signature verification
+    let currentNonceA = getNonce(nonces, channel.partyA);
+    if (nonceA != currentNonceA) {
+      Runtime.trap("invalid nonce - expected " # currentNonceA.toText() # ", got " # nonceA.toText());
+    };
+    let currentNonceB = getNonce(nonces, channel.partyB);
+    if (nonceB != currentNonceB) {
+      Runtime.trap("invalid nonce - expected " # currentNonceB.toText() # ", got " # nonceB.toText());
+    };
+
+    // 4. Require registered public keys
+    let pubKeyAHex = switch (publicKeys.get(channel.partyA)) {
       case (?pk) { pk };
       case (null) { Runtime.trap("partyA has no registered public key") };
     };
-
-    let pubKeyB = switch (publicKeys.get(channel.partyB)) {
+    let pubKeyBHex = switch (publicKeys.get(channel.partyB)) {
       case (?pk) { pk };
       case (null) { Runtime.trap("partyB has no registered public key") };
     };
 
-    let message = channelId # "|" # finalBalanceA.toText() # "|" # finalBalanceB.toText();
+    // 5. Verify both signatures
+    let message = channelId # "|" # finalBalanceA.toText() # "|" # finalBalanceB.toText() # "|" # nonceA.toText() # "|" # nonceB.toText();
     let messageBytes = message.encodeUtf8().toArray();
-
     let sigABytes = Ed25519.Utils.hexToBytes(sigA);
     let sigBBytes = Ed25519.Utils.hexToBytes(sigB);
-    let pubKeyABytes = Ed25519.Utils.hexToBytes(pubKeyA);
-    let pubKeyBBytes = Ed25519.Utils.hexToBytes(pubKeyB);
+    let pubKeyABytes = Ed25519.Utils.hexToBytes(pubKeyAHex);
+    let pubKeyBBytes = Ed25519.Utils.hexToBytes(pubKeyBHex);
 
-    let isValidA = Ed25519.ED25519.verify(sigABytes, messageBytes, pubKeyABytes);
-    let isValidB = Ed25519.ED25519.verify(sigBBytes, messageBytes, pubKeyBBytes);
-
-    if (not isValidA) {
-      Runtime.trap("invalid signature from partyA");
-    };
-    if (not isValidB) {
-      Runtime.trap("invalid signature from partyB");
+    let validA = Ed25519.ED25519.verify(sigABytes, messageBytes, pubKeyABytes);
+    let validB = Ed25519.ED25519.verify(sigBBytes, messageBytes, pubKeyBBytes);
+    if (not validA or not validB) {
+      Runtime.trap("invalid signature — cooperative close not authorized by both parties");
     };
 
-    let balanceA = getBalance(balances, channel.partyA);
-    balances.add(channel.partyA, balanceA + finalBalanceA);
+    // 6. Payout
+    let partyABalance = getBalance(balances, channel.partyA);
+    balances.add(channel.partyA, partyABalance + finalBalanceA);
 
-    let balanceB = getBalance(balances, channel.partyB);
-    balances.add(channel.partyB, balanceB + finalBalanceB);
+    let partyBBalance = getBalance(balances, channel.partyB);
+    balances.add(channel.partyB, partyBBalance + finalBalanceB);
 
+    // 7. Close channel
     let updated = { channel with status = #Closed };
     channels.add(channelId, updated);
 
+    // 8. Log
     let logEntry = "Channel closed cooperatively: id=" # channelId # " finalBalanceA=" # finalBalanceA.toText() # " finalBalanceB=" # finalBalanceB.toText();
     eventLog.add(logEntry);
+
+    // 9. Increment both nonces only after full success
+    nonces.add(channel.partyA, currentNonceA + 1);
+    nonces.add(channel.partyB, currentNonceB + 1);
   };
 
   public func getChannel(channels : Map.Map<Common.ChannelId, Types.ChannelRecord>, channelId : Common.ChannelId) : ?Types.ChannelRecord {
@@ -388,5 +448,12 @@ module {
 
   public func getRegisteredPublicKey(publicKeys : Map.Map<Common.LxmfHash, Text>, lxmfHash : Common.LxmfHash) : ?Text {
     publicKeys.get(lxmfHash);
+  };
+
+  public func getNonce(nonces : Map.Map<Common.LxmfHash, Nat>, lxmfHash : Common.LxmfHash) : Nat {
+    switch (nonces.get(lxmfHash)) {
+      case (?n) { n };
+      case (null) { 0 };
+    };
   };
 };

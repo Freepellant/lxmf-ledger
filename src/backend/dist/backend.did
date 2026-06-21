@@ -40,22 +40,26 @@ service : {
   __htlcs: () -> (reserved) query;
   __nextChannelId: () -> (reserved) query;
   __nextHtlcId: () -> (reserved) query;
+  __nonces: () -> (reserved) query;
   __publicKeys: () -> (reserved) query;
   closeChannelCooperative: (channelId: ChannelId, finalBalanceA: nat,
-   finalBalanceB: nat, sigA: text, sigB: text) -> ();
+   finalBalanceB: nat, nonceA: nat, nonceB: nat, sigA: text, sigB: text) ->
+   ();
   deposit: (lxmfHash: LxmfHash, amount: nat) -> ();
   getBalance: (lxmfHash: LxmfHash) -> (nat) query;
   getChannel: (channelId: ChannelId) -> (opt ChannelRecord) query;
   getHTLC: (htlcId: HtlcId) -> (opt HtlcRecord) query;
+  getNonce: (lxmfHash: LxmfHash) -> (nat) query;
   getRegisteredPublicKey: (lxmfHash: LxmfHash) -> (opt text) query;
-  joinChannel: (channelId: ChannelId, partyB: LxmfHash, amountB: nat,
-   signature: text) -> ();
+  joinChannel: (channelId: ChannelId, partyB: LxmfHash, amountB: nat, nonce:
+   nat, signature: text) -> ();
   listChannelsForAddress: (lxmfHash: LxmfHash) -> (vec ChannelRecord) query;
   listHTLCsForAddress: (lxmfHash: LxmfHash) -> (vec HtlcRecord) query;
   lockHTLC: (senderLxmfHash: LxmfHash, receiverLxmfHash: LxmfHash, amount:
-   nat, paymentHash: text, expirySeconds: nat, signature: text) -> (HtlcId);
-  openChannel: (partyA: LxmfHash, partyB: LxmfHash, amountA: nat, signature:
-   text) -> (ChannelId);
+   nat, paymentHash: text, expirySeconds: nat, nonce: nat, signature:
+   text) -> (HtlcId);
+  openChannel: (partyA: LxmfHash, partyB: LxmfHash, amountA: nat, nonce: 
+   nat, signature: text) -> (ChannelId);
   refundHTLC: (htlcId: HtlcId) -> ();
   registerPublicKey: (lxmfHash: LxmfHash, publicKeyHex: text) -> ();
   releaseHTLC: (htlcId: HtlcId, preimage: text) -> ();

@@ -36,6 +36,7 @@ import {
   useEventLog,
   useGetBalance,
   useGetChannel,
+  useGetNonce,
   useGetRegisteredPublicKey,
   useJoinChannel,
   useListChannels,
@@ -54,6 +55,7 @@ import {
   GitBranch,
   GitMerge,
   GitPullRequest,
+  Hash,
   KeyRound,
   Lock,
   RefreshCw,
@@ -114,6 +116,7 @@ export default function Dashboard() {
   const { data: htlcs, isLoading: htlcsLoading } = useListHTLCs(lxmfHash);
   const { data: channels, isLoading: channelsLoading } =
     useListChannels(lxmfHash);
+  const { data: nonce, isLoading: nonceLoading } = useGetNonce(lxmfHash);
   const { data: events, isLoading: eventsLoading } = useEventLog();
 
   const depositMutation = useDeposit();
@@ -130,6 +133,7 @@ export default function Dashboard() {
     amount: "",
     paymentHash: "",
     expiry: "300",
+    nonce: "",
     signature: "",
   });
 
@@ -137,6 +141,7 @@ export default function Dashboard() {
     partyA: "",
     partyB: "",
     amountA: "",
+    nonce: "",
     signature: "",
   });
 
@@ -144,6 +149,7 @@ export default function Dashboard() {
     channelId: "",
     partyB: "",
     amountB: "",
+    nonce: "",
     signature: "",
   });
 
@@ -151,6 +157,8 @@ export default function Dashboard() {
     channelId: "",
     finalBalanceA: "",
     finalBalanceB: "",
+    nonceA: "",
+    nonceB: "",
     sigA: "",
     sigB: "",
   });
@@ -164,6 +172,13 @@ export default function Dashboard() {
     useGetRegisteredPublicKey(lxmfHash);
   const registerPublicKeyMutation = useRegisterPublicKey();
 
+  // Fetch channel details and nonces for close channel parties
+  const { data: closeChannelDetails } = useGetChannel(
+    closeChannelForm.channelId || "",
+  );
+  const { data: nonceA } = useGetNonce(closeChannelDetails?.partyA || "");
+  const { data: nonceB } = useGetNonce(closeChannelDetails?.partyB || "");
+
   const handleDeposit = () => {
     if (!lxmfHash || !depositAmount) return;
     depositMutation.mutate({ lxmfHash, amount: BigInt(depositAmount) });
@@ -175,17 +190,31 @@ export default function Dashboard() {
       !lockForm.receiver ||
       !lockForm.amount ||
       !lockForm.paymentHash ||
+      !lockForm.nonce ||
       !lockForm.signature
     )
       return;
-    lockMutation.mutate({
-      senderLxmfHash: lockForm.sender,
-      receiverLxmfHash: lockForm.receiver,
-      amount: BigInt(lockForm.amount),
-      paymentHash: lockForm.paymentHash,
-      expirySeconds: BigInt(lockForm.expiry),
-      signature: lockForm.signature,
-    });
+    lockMutation.mutate(
+      {
+        senderLxmfHash: lockForm.sender,
+        receiverLxmfHash: lockForm.receiver,
+        amount: BigInt(lockForm.amount),
+        paymentHash: lockForm.paymentHash,
+        expirySeconds: BigInt(lockForm.expiry),
+        nonce: BigInt(lockForm.nonce),
+        signature: lockForm.signature,
+      },
+      {
+        onError: (error) => {
+          const msg = error instanceof Error ? error.message : "Unknown error";
+          if (msg.includes("nonce")) {
+            toast.error(
+              `Nonce mismatch: ${msg}. Current nonce for ${lockForm.sender} is ${nonce ?? 0}. Please re-sign with the correct nonce and resubmit.`,
+            );
+          }
+        },
+      },
+    );
   };
 
   const handleRegisterPublicKey = () => {
@@ -215,30 +244,58 @@ export default function Dashboard() {
       !openChannelForm.partyA ||
       !openChannelForm.partyB ||
       !openChannelForm.amountA ||
+      !openChannelForm.nonce ||
       !openChannelForm.signature
     )
       return;
-    openChannelMutation.mutate({
-      partyA: openChannelForm.partyA,
-      partyB: openChannelForm.partyB,
-      amountA: BigInt(openChannelForm.amountA),
-      signature: openChannelForm.signature,
-    });
+    openChannelMutation.mutate(
+      {
+        partyA: openChannelForm.partyA,
+        partyB: openChannelForm.partyB,
+        amountA: BigInt(openChannelForm.amountA),
+        nonce: BigInt(openChannelForm.nonce),
+        signature: openChannelForm.signature,
+      },
+      {
+        onError: (error) => {
+          const msg = error instanceof Error ? error.message : "Unknown error";
+          if (msg.includes("nonce")) {
+            toast.error(
+              `Nonce mismatch: ${msg}. Current nonce for ${openChannelForm.partyA} is ${nonce ?? 0}. Please re-sign with the correct nonce and resubmit.`,
+            );
+          }
+        },
+      },
+    );
   };
 
   const handleJoinChannel = () => {
     if (
       !joinChannelForm.channelId ||
       !joinChannelForm.partyB ||
+      !joinChannelForm.nonce ||
       !joinChannelForm.signature
     )
       return;
-    joinChannelMutation.mutate({
-      channelId: joinChannelForm.channelId,
-      partyB: joinChannelForm.partyB,
-      amountB: BigInt(joinChannelForm.amountB || "0"),
-      signature: joinChannelForm.signature,
-    });
+    joinChannelMutation.mutate(
+      {
+        channelId: joinChannelForm.channelId,
+        partyB: joinChannelForm.partyB,
+        amountB: BigInt(joinChannelForm.amountB || "0"),
+        nonce: BigInt(joinChannelForm.nonce),
+        signature: joinChannelForm.signature,
+      },
+      {
+        onError: (error) => {
+          const msg = error instanceof Error ? error.message : "Unknown error";
+          if (msg.includes("nonce")) {
+            toast.error(
+              `Nonce mismatch: ${msg}. Current nonce for ${joinChannelForm.partyB} is ${nonce ?? 0}. Please re-sign with the correct nonce and resubmit.`,
+            );
+          }
+        },
+      },
+    );
   };
 
   const handleCloseChannel = () => {
@@ -246,17 +303,33 @@ export default function Dashboard() {
       !closeChannelForm.channelId ||
       !closeChannelForm.finalBalanceA ||
       !closeChannelForm.finalBalanceB ||
+      !closeChannelForm.nonceA ||
+      !closeChannelForm.nonceB ||
       !closeChannelForm.sigA ||
       !closeChannelForm.sigB
     )
       return;
-    closeChannelMutation.mutate({
-      channelId: closeChannelForm.channelId,
-      finalBalanceA: BigInt(closeChannelForm.finalBalanceA),
-      finalBalanceB: BigInt(closeChannelForm.finalBalanceB),
-      sigA: closeChannelForm.sigA,
-      sigB: closeChannelForm.sigB,
-    });
+    closeChannelMutation.mutate(
+      {
+        channelId: closeChannelForm.channelId,
+        finalBalanceA: BigInt(closeChannelForm.finalBalanceA),
+        finalBalanceB: BigInt(closeChannelForm.finalBalanceB),
+        nonceA: BigInt(closeChannelForm.nonceA),
+        nonceB: BigInt(closeChannelForm.nonceB),
+        sigA: closeChannelForm.sigA,
+        sigB: closeChannelForm.sigB,
+      },
+      {
+        onError: (error) => {
+          const msg = error instanceof Error ? error.message : "Unknown error";
+          if (msg.includes("nonce")) {
+            toast.error(
+              `Nonce mismatch: ${msg}. Current nonce for Party A is ${nonceA ?? 0}, for Party B is ${nonceB ?? 0}. Please re-sign with the correct nonces and resubmit.`,
+            );
+          }
+        },
+      },
+    );
   };
 
   function channelStatusBadge(status: ChannelStatus) {
@@ -382,20 +455,20 @@ export default function Dashboard() {
           <Card className="bg-card border-border">
             <CardHeader className="pb-2">
               <CardDescription className="flex items-center gap-2 text-muted-foreground">
-                <Coins className="h-4 w-4" />
-                Total HTLC Volume
+                <Hash className="h-4 w-4" />
+                Current Nonce
               </CardDescription>
               <CardTitle className="text-3xl font-display">
-                {htlcsLoading ? (
-                  <Skeleton className="h-9 w-24" />
+                {nonceLoading ? (
+                  <Skeleton className="h-9 w-16" />
                 ) : (
-                  `${formatBalance(htlcs?.reduce((sum, h) => sum + h.amount, 0n) ?? 0n)}`
+                  `${formatBalance(nonce ?? 0n)}`
                 )}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-xs text-muted-foreground">
-                All time locked value
+                Next nonce for signing
               </p>
             </CardContent>
           </Card>
@@ -544,24 +617,39 @@ export default function Dashboard() {
                 className="font-mono"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="signature">Signature (hex)</Label>
-              <Input
-                id="signature"
-                data-ocid="htlc.signature_input"
-                placeholder="Ed25519 signature over the message below"
-                value={lockForm.signature}
-                onChange={(e) =>
-                  setLockForm((f) => ({ ...f, signature: e.target.value }))
-                }
-                className="font-mono"
-              />
-              <p className="text-xs text-muted-foreground">
-                Sign the exact pipe-separated message below with your Ed25519
-                private key offline. The frontend does not generate or store
-                private keys.
-              </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="nonce">Nonce</Label>
+                <Input
+                  id="nonce"
+                  data-ocid="htlc.nonce_input"
+                  type="number"
+                  placeholder="Current nonce"
+                  value={lockForm.nonce}
+                  onChange={(e) =>
+                    setLockForm((f) => ({ ...f, nonce: e.target.value }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="signature">Signature (hex)</Label>
+                <Input
+                  id="signature"
+                  data-ocid="htlc.signature_input"
+                  placeholder="Ed25519 signature over the message below"
+                  value={lockForm.signature}
+                  onChange={(e) =>
+                    setLockForm((f) => ({ ...f, signature: e.target.value }))
+                  }
+                  className="font-mono"
+                />
+              </div>
             </div>
+            <p className="text-xs text-muted-foreground">
+              Sign the exact pipe-separated message below with your Ed25519
+              private key offline. The frontend does not generate or store
+              private keys.
+            </p>
             {lockForm.sender &&
               lockForm.receiver &&
               lockForm.amount &&
@@ -572,7 +660,8 @@ export default function Dashboard() {
                   </p>
                   <code className="block text-xs font-mono text-muted-foreground break-all">
                     {lockForm.sender}|{lockForm.receiver}|{lockForm.amount}|
-                    {lockForm.paymentHash}|{lockForm.expiry}
+                    {lockForm.paymentHash}|{lockForm.expiry}|
+                    {lockForm.nonce || "0"}
                   </code>
                 </div>
               )}
@@ -667,6 +756,22 @@ export default function Dashboard() {
                 />
               </div>
               <div className="space-y-2">
+                <Label htmlFor="open-nonce">Nonce</Label>
+                <Input
+                  id="open-nonce"
+                  data-ocid="channel.open_nonce_input"
+                  type="number"
+                  placeholder="Current nonce"
+                  value={openChannelForm.nonce}
+                  onChange={(e) =>
+                    setOpenChannelForm((f) => ({
+                      ...f,
+                      nonce: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="open-signature">Signature (hex)</Label>
                 <Input
                   id="open-signature"
@@ -692,7 +797,7 @@ export default function Dashboard() {
                   </p>
                   <code className="block text-xs font-mono text-muted-foreground break-all">
                     {openChannelForm.partyA}|{openChannelForm.partyB}|
-                    {openChannelForm.amountA}
+                    {openChannelForm.amountA}|{openChannelForm.nonce || "0"}
                   </code>
                 </div>
               )}
@@ -777,6 +882,22 @@ export default function Dashboard() {
                 />
               </div>
               <div className="space-y-2">
+                <Label htmlFor="join-nonce">Nonce</Label>
+                <Input
+                  id="join-nonce"
+                  data-ocid="channel.join_nonce_input"
+                  type="number"
+                  placeholder="Current nonce"
+                  value={joinChannelForm.nonce}
+                  onChange={(e) =>
+                    setJoinChannelForm((f) => ({
+                      ...f,
+                      nonce: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="join-signature">Signature (hex)</Label>
                 <Input
                   id="join-signature"
@@ -800,7 +921,8 @@ export default function Dashboard() {
                 </p>
                 <code className="block text-xs font-mono text-muted-foreground break-all">
                   {joinChannelForm.channelId}|{joinChannelForm.partyB}|
-                  {joinChannelForm.amountB || "0"}
+                  {joinChannelForm.amountB || "0"}|
+                  {joinChannelForm.nonce || "0"}
                 </code>
               </div>
             )}
@@ -885,6 +1007,52 @@ export default function Dashboard() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
+                <Label htmlFor="close-nonce-a">Nonce A (Party A)</Label>
+                <Input
+                  id="close-nonce-a"
+                  data-ocid="channel.close_nonce_a_input"
+                  type="number"
+                  placeholder="Party A current nonce"
+                  value={closeChannelForm.nonceA}
+                  onChange={(e) =>
+                    setCloseChannelForm((f) => ({
+                      ...f,
+                      nonceA: e.target.value,
+                    }))
+                  }
+                />
+                {closeChannelDetails?.partyA && (
+                  <p className="text-xs text-muted-foreground">
+                    Current nonce for{" "}
+                    {truncateHash(closeChannelDetails.partyA, 6)}: {nonceA ?? 0}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="close-nonce-b">Nonce B (Party B)</Label>
+                <Input
+                  id="close-nonce-b"
+                  data-ocid="channel.close_nonce_b_input"
+                  type="number"
+                  placeholder="Party B current nonce"
+                  value={closeChannelForm.nonceB}
+                  onChange={(e) =>
+                    setCloseChannelForm((f) => ({
+                      ...f,
+                      nonceB: e.target.value,
+                    }))
+                  }
+                />
+                {closeChannelDetails?.partyB && (
+                  <p className="text-xs text-muted-foreground">
+                    Current nonce for{" "}
+                    {truncateHash(closeChannelDetails.partyB, 6)}: {nonceB ?? 0}
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
                 <Label htmlFor="close-sig-a">Signature A (hex)</Label>
                 <Input
                   id="close-sig-a"
@@ -921,7 +1089,9 @@ export default function Dashboard() {
                   <code className="block text-xs font-mono text-muted-foreground break-all">
                     {closeChannelForm.channelId}|
                     {closeChannelForm.finalBalanceA}|
-                    {closeChannelForm.finalBalanceB}
+                    {closeChannelForm.finalBalanceB}|
+                    {closeChannelForm.nonceA || "0"}|
+                    {closeChannelForm.nonceB || "0"}
                   </code>
                 </div>
               )}

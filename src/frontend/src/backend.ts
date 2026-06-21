@@ -127,18 +127,20 @@ export interface backendInterface {
     __htlcs(): Promise<any>;
     __nextChannelId(): Promise<any>;
     __nextHtlcId(): Promise<any>;
+    __nonces(): Promise<any>;
     __publicKeys(): Promise<any>;
-    closeChannelCooperative(channelId: ChannelId, finalBalanceA: bigint, finalBalanceB: bigint, sigA: string, sigB: string): Promise<void>;
+    closeChannelCooperative(channelId: ChannelId, finalBalanceA: bigint, finalBalanceB: bigint, nonceA: bigint, nonceB: bigint, sigA: string, sigB: string): Promise<void>;
     deposit(lxmfHash: LxmfHash, amount: bigint): Promise<void>;
     getBalance(lxmfHash: LxmfHash): Promise<bigint>;
     getChannel(channelId: ChannelId): Promise<ChannelRecord | null>;
     getHTLC(htlcId: HtlcId): Promise<HtlcRecord | null>;
+    getNonce(lxmfHash: LxmfHash): Promise<bigint>;
     getRegisteredPublicKey(lxmfHash: LxmfHash): Promise<string | null>;
-    joinChannel(channelId: ChannelId, partyB: LxmfHash, amountB: bigint, signature: string): Promise<void>;
+    joinChannel(channelId: ChannelId, partyB: LxmfHash, amountB: bigint, nonce: bigint, signature: string): Promise<void>;
     listChannelsForAddress(lxmfHash: LxmfHash): Promise<Array<ChannelRecord>>;
     listHTLCsForAddress(lxmfHash: LxmfHash): Promise<Array<HtlcRecord>>;
-    lockHTLC(senderLxmfHash: LxmfHash, receiverLxmfHash: LxmfHash, amount: bigint, paymentHash: string, expirySeconds: bigint, signature: string): Promise<HtlcId>;
-    openChannel(partyA: LxmfHash, partyB: LxmfHash, amountA: bigint, signature: string): Promise<ChannelId>;
+    lockHTLC(senderLxmfHash: LxmfHash, receiverLxmfHash: LxmfHash, amount: bigint, paymentHash: string, expirySeconds: bigint, nonce: bigint, signature: string): Promise<HtlcId>;
+    openChannel(partyA: LxmfHash, partyB: LxmfHash, amountA: bigint, nonce: bigint, signature: string): Promise<ChannelId>;
     refundHTLC(htlcId: HtlcId): Promise<void>;
     registerPublicKey(lxmfHash: LxmfHash, publicKeyHex: string): Promise<void>;
     releaseHTLC(htlcId: HtlcId, preimage: string): Promise<void>;
@@ -230,6 +232,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async __nonces(): Promise<any> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.__nonces();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.__nonces();
+            return result;
+        }
+    }
     async __publicKeys(): Promise<any> {
         if (this.processError) {
             try {
@@ -244,17 +260,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async closeChannelCooperative(arg0: ChannelId, arg1: bigint, arg2: bigint, arg3: string, arg4: string): Promise<void> {
+    async closeChannelCooperative(arg0: ChannelId, arg1: bigint, arg2: bigint, arg3: bigint, arg4: bigint, arg5: string, arg6: string): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.closeChannelCooperative(arg0, arg1, arg2, arg3, arg4);
+                const result = await this.actor.closeChannelCooperative(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.closeChannelCooperative(arg0, arg1, arg2, arg3, arg4);
+            const result = await this.actor.closeChannelCooperative(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
             return result;
         }
     }
@@ -314,6 +330,20 @@ export class Backend implements backendInterface {
             return from_candid_opt_n7(this._uploadFile, this._downloadFile, result);
         }
     }
+    async getNonce(arg0: LxmfHash): Promise<bigint> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getNonce(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getNonce(arg0);
+            return result;
+        }
+    }
     async getRegisteredPublicKey(arg0: LxmfHash): Promise<string | null> {
         if (this.processError) {
             try {
@@ -328,17 +358,17 @@ export class Backend implements backendInterface {
             return from_candid_opt_n12(this._uploadFile, this._downloadFile, result);
         }
     }
-    async joinChannel(arg0: ChannelId, arg1: LxmfHash, arg2: bigint, arg3: string): Promise<void> {
+    async joinChannel(arg0: ChannelId, arg1: LxmfHash, arg2: bigint, arg3: bigint, arg4: string): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.joinChannel(arg0, arg1, arg2, arg3);
+                const result = await this.actor.joinChannel(arg0, arg1, arg2, arg3, arg4);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.joinChannel(arg0, arg1, arg2, arg3);
+            const result = await this.actor.joinChannel(arg0, arg1, arg2, arg3, arg4);
             return result;
         }
     }
@@ -370,31 +400,31 @@ export class Backend implements backendInterface {
             return from_candid_vec_n14(this._uploadFile, this._downloadFile, result);
         }
     }
-    async lockHTLC(arg0: LxmfHash, arg1: LxmfHash, arg2: bigint, arg3: string, arg4: bigint, arg5: string): Promise<HtlcId> {
+    async lockHTLC(arg0: LxmfHash, arg1: LxmfHash, arg2: bigint, arg3: string, arg4: bigint, arg5: bigint, arg6: string): Promise<HtlcId> {
         if (this.processError) {
             try {
-                const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5);
+                const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5);
+            const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
             return result;
         }
     }
-    async openChannel(arg0: LxmfHash, arg1: LxmfHash, arg2: bigint, arg3: string): Promise<ChannelId> {
+    async openChannel(arg0: LxmfHash, arg1: LxmfHash, arg2: bigint, arg3: bigint, arg4: string): Promise<ChannelId> {
         if (this.processError) {
             try {
-                const result = await this.actor.openChannel(arg0, arg1, arg2, arg3);
+                const result = await this.actor.openChannel(arg0, arg1, arg2, arg3, arg4);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.openChannel(arg0, arg1, arg2, arg3);
+            const result = await this.actor.openChannel(arg0, arg1, arg2, arg3, arg4);
             return result;
         }
     }

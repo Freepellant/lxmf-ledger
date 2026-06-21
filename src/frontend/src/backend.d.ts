@@ -39,17 +39,18 @@ export enum HtlcStatus {
     Locked = "Locked"
 }
 export interface backendInterface {
-    closeChannelCooperative(channelId: ChannelId, finalBalanceA: bigint, finalBalanceB: bigint, sigA: string, sigB: string): Promise<void>;
+    closeChannelCooperative(channelId: ChannelId, finalBalanceA: bigint, finalBalanceB: bigint, nonceA: bigint, nonceB: bigint, sigA: string, sigB: string): Promise<void>;
     deposit(lxmfHash: LxmfHash, amount: bigint): Promise<void>;
     getBalance(lxmfHash: LxmfHash): Promise<bigint>;
     getChannel(channelId: ChannelId): Promise<ChannelRecord | null>;
     getHTLC(htlcId: HtlcId): Promise<HtlcRecord | null>;
+    getNonce(lxmfHash: LxmfHash): Promise<bigint>;
     getRegisteredPublicKey(lxmfHash: LxmfHash): Promise<string | null>;
-    joinChannel(channelId: ChannelId, partyB: LxmfHash, amountB: bigint, signature: string): Promise<void>;
+    joinChannel(channelId: ChannelId, partyB: LxmfHash, amountB: bigint, nonce: bigint, signature: string): Promise<void>;
     listChannelsForAddress(lxmfHash: LxmfHash): Promise<Array<ChannelRecord>>;
     listHTLCsForAddress(lxmfHash: LxmfHash): Promise<Array<HtlcRecord>>;
-    lockHTLC(senderLxmfHash: LxmfHash, receiverLxmfHash: LxmfHash, amount: bigint, paymentHash: string, expirySeconds: bigint, signature: string): Promise<HtlcId>;
-    openChannel(partyA: LxmfHash, partyB: LxmfHash, amountA: bigint, signature: string): Promise<ChannelId>;
+    lockHTLC(senderLxmfHash: LxmfHash, receiverLxmfHash: LxmfHash, amount: bigint, paymentHash: string, expirySeconds: bigint, nonce: bigint, signature: string): Promise<HtlcId>;
+    openChannel(partyA: LxmfHash, partyB: LxmfHash, amountA: bigint, nonce: bigint, signature: string): Promise<ChannelId>;
     refundHTLC(htlcId: HtlcId): Promise<void>;
     registerPublicKey(lxmfHash: LxmfHash, publicKeyHex: string): Promise<void>;
     releaseHTLC(htlcId: HtlcId, preimage: string): Promise<void>;

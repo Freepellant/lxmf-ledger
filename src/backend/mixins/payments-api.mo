@@ -3,6 +3,7 @@ import List "mo:core/List";
 import Common "../types/common";
 import Types "../types/payments";
 import PaymentsLib "../lib/payments";
+import Debug "mo:core/Debug";
 
 mixin (
   balances : Map.Map<Common.LxmfHash, Nat>,
@@ -12,6 +13,7 @@ mixin (
   publicKeys : Map.Map<Common.LxmfHash, Text>,
   channels : Map.Map<Common.ChannelId, Types.ChannelRecord>,
   nextChannelId : { var value : Nat },
+  nonces : Map.Map<Common.LxmfHash, Nat>,
 ) {
   public func deposit(lxmfHash : Common.LxmfHash, amount : Nat) : async () {
     PaymentsLib.deposit(balances, lxmfHash, amount);
@@ -27,9 +29,10 @@ mixin (
     amount : Nat,
     paymentHash : Text,
     expirySeconds : Nat,
+    nonce : Nat,
     signature : Text,
   ) : async Common.HtlcId {
-    PaymentsLib.lockHTLC(balances, htlcs, eventLog, nextHtlcId, publicKeys, senderLxmfHash, receiverLxmfHash, amount, paymentHash, expirySeconds, signature);
+    PaymentsLib.lockHTLC(balances, htlcs, eventLog, nextHtlcId, publicKeys, nonces, senderLxmfHash, receiverLxmfHash, amount, paymentHash, expirySeconds, nonce, signature);
   };
 
   public func releaseHTLC(htlcId : Common.HtlcId, preimage : Text) : async () {
@@ -56,28 +59,32 @@ mixin (
     partyA : Common.LxmfHash,
     partyB : Common.LxmfHash,
     amountA : Nat,
+    nonce : Nat,
     signature : Text,
   ) : async Common.ChannelId {
-    PaymentsLib.openChannel(balances, channels, eventLog, nextChannelId, publicKeys, partyA, partyB, amountA, signature);
+    PaymentsLib.openChannel(balances, channels, eventLog, nextChannelId, publicKeys, nonces, partyA, partyB, amountA, nonce, signature);
   };
 
   public func joinChannel(
     channelId : Common.ChannelId,
     partyB : Common.LxmfHash,
     amountB : Nat,
+    nonce : Nat,
     signature : Text,
   ) : async () {
-    PaymentsLib.joinChannel(balances, channels, eventLog, publicKeys, channelId, partyB, amountB, signature);
+    PaymentsLib.joinChannel(balances, channels, eventLog, publicKeys, nonces, channelId, partyB, amountB, nonce, signature);
   };
 
   public func closeChannelCooperative(
     channelId : Common.ChannelId,
     finalBalanceA : Nat,
     finalBalanceB : Nat,
+    nonceA : Nat,
+    nonceB : Nat,
     sigA : Text,
     sigB : Text,
   ) : async () {
-    PaymentsLib.closeChannelCooperative(balances, channels, eventLog, publicKeys, channelId, finalBalanceA, finalBalanceB, sigA, sigB);
+    PaymentsLib.closeChannelCooperative(balances, channels, eventLog, publicKeys, nonces, channelId, finalBalanceA, finalBalanceB, nonceA, nonceB, sigA, sigB);
   };
 
   public query func getChannel(channelId : Common.ChannelId) : async ?Types.ChannelRecord {
@@ -90,5 +97,9 @@ mixin (
 
   public query func getRegisteredPublicKey(lxmfHash : Common.LxmfHash) : async ?Text {
     PaymentsLib.getRegisteredPublicKey(publicKeys, lxmfHash);
+  };
+
+  public query func getNonce(lxmfHash : Common.LxmfHash) : async Nat {
+    PaymentsLib.getNonce(nonces, lxmfHash);
   };
 };

@@ -607,8 +607,8 @@ function concatBytes(...arrays) {
   }
   return res;
 }
-class Hash {
-}
+let Hash$1 = class Hash {
+};
 function createHasher$1(hashCons) {
   const hashC = (msg) => hashCons().update(toBytes(msg)).digest();
   const tmp = hashCons();
@@ -644,7 +644,7 @@ function Chi(a2, b2, c2) {
 function Maj(a2, b2, c2) {
   return a2 & b2 ^ a2 & c2 ^ b2 & c2;
 }
-class HashMD extends Hash {
+class HashMD extends Hash$1 {
   constructor(blockLen, outputLen, padOffset, isLE) {
     super();
     this.finished = false;
@@ -31464,19 +31464,6 @@ const CircleX = createLucideIcon("circle-x", __iconNode$c);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$b = [
-  ["circle", { cx: "8", cy: "8", r: "6", key: "3yglwk" }],
-  ["path", { d: "M18.09 10.37A6 6 0 1 1 10.34 18", key: "t5s6rm" }],
-  ["path", { d: "M7 6h1v4", key: "1obek4" }],
-  ["path", { d: "m16.71 13.88.7.71-2.82 2.82", key: "1rbuyh" }]
-];
-const Coins = createLucideIcon("coins", __iconNode$b);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$a = [
   [
     "path",
     {
@@ -31492,7 +31479,20 @@ const __iconNode$a = [
     }
   ]
 ];
-const Droplets = createLucideIcon("droplets", __iconNode$a);
+const Droplets = createLucideIcon("droplets", __iconNode$b);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$a = [
+  ["line", { x1: "6", x2: "6", y1: "3", y2: "15", key: "17qcm7" }],
+  ["circle", { cx: "18", cy: "6", r: "3", key: "1h7g24" }],
+  ["circle", { cx: "6", cy: "18", r: "3", key: "fqmcym" }],
+  ["path", { d: "M18 9a9 9 0 0 1-9 9", key: "n2h4wq" }]
+];
+const GitBranch = createLucideIcon("git-branch", __iconNode$a);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31500,12 +31500,11 @@ const Droplets = createLucideIcon("droplets", __iconNode$a);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$9 = [
-  ["line", { x1: "6", x2: "6", y1: "3", y2: "15", key: "17qcm7" }],
-  ["circle", { cx: "18", cy: "6", r: "3", key: "1h7g24" }],
-  ["circle", { cx: "6", cy: "18", r: "3", key: "fqmcym" }],
-  ["path", { d: "M18 9a9 9 0 0 1-9 9", key: "n2h4wq" }]
+  ["circle", { cx: "18", cy: "18", r: "3", key: "1xkwt0" }],
+  ["circle", { cx: "6", cy: "6", r: "3", key: "1lh9wr" }],
+  ["path", { d: "M6 21V9a9 9 0 0 0 9 9", key: "7kw0sc" }]
 ];
-const GitBranch = createLucideIcon("git-branch", __iconNode$9);
+const GitMerge = createLucideIcon("git-merge", __iconNode$9);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31515,9 +31514,10 @@ const GitBranch = createLucideIcon("git-branch", __iconNode$9);
 const __iconNode$8 = [
   ["circle", { cx: "18", cy: "18", r: "3", key: "1xkwt0" }],
   ["circle", { cx: "6", cy: "6", r: "3", key: "1lh9wr" }],
-  ["path", { d: "M6 21V9a9 9 0 0 0 9 9", key: "7kw0sc" }]
+  ["path", { d: "M13 6h3a2 2 0 0 1 2 2v7", key: "1yeb86" }],
+  ["line", { x1: "6", x2: "6", y1: "9", y2: "21", key: "rroup" }]
 ];
-const GitMerge = createLucideIcon("git-merge", __iconNode$8);
+const GitPullRequest = createLucideIcon("git-pull-request", __iconNode$8);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31525,12 +31525,12 @@ const GitMerge = createLucideIcon("git-merge", __iconNode$8);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$7 = [
-  ["circle", { cx: "18", cy: "18", r: "3", key: "1xkwt0" }],
-  ["circle", { cx: "6", cy: "6", r: "3", key: "1lh9wr" }],
-  ["path", { d: "M13 6h3a2 2 0 0 1 2 2v7", key: "1yeb86" }],
-  ["line", { x1: "6", x2: "6", y1: "9", y2: "21", key: "rroup" }]
+  ["line", { x1: "4", x2: "20", y1: "9", y2: "9", key: "4lhtct" }],
+  ["line", { x1: "4", x2: "20", y1: "15", y2: "15", key: "vyu0kd" }],
+  ["line", { x1: "10", x2: "8", y1: "3", y2: "21", key: "1ggp8o" }],
+  ["line", { x1: "16", x2: "14", y1: "3", y2: "21", key: "weycgp" }]
 ];
-const GitPullRequest = createLucideIcon("git-pull-request", __iconNode$7);
+const Hash2 = createLucideIcon("hash", __iconNode$7);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -32029,9 +32029,10 @@ Service({
   "__htlcs": Func([], [Reserved], ["query"]),
   "__nextChannelId": Func([], [Reserved], ["query"]),
   "__nextHtlcId": Func([], [Reserved], ["query"]),
+  "__nonces": Func([], [Reserved], ["query"]),
   "__publicKeys": Func([], [Reserved], ["query"]),
   "closeChannelCooperative": Func(
-    [ChannelId, Nat, Nat, Text, Text],
+    [ChannelId, Nat, Nat, Nat, Nat, Text, Text],
     [],
     []
   ),
@@ -32039,12 +32040,17 @@ Service({
   "getBalance": Func([LxmfHash], [Nat], ["query"]),
   "getChannel": Func([ChannelId], [Opt(ChannelRecord)], ["query"]),
   "getHTLC": Func([HtlcId], [Opt(HtlcRecord)], ["query"]),
+  "getNonce": Func([LxmfHash], [Nat], ["query"]),
   "getRegisteredPublicKey": Func(
     [LxmfHash],
     [Opt(Text)],
     ["query"]
   ),
-  "joinChannel": Func([ChannelId, LxmfHash, Nat, Text], [], []),
+  "joinChannel": Func(
+    [ChannelId, LxmfHash, Nat, Nat, Text],
+    [],
+    []
+  ),
   "listChannelsForAddress": Func(
     [LxmfHash],
     [Vec(ChannelRecord)],
@@ -32056,12 +32062,12 @@ Service({
     ["query"]
   ),
   "lockHTLC": Func(
-    [LxmfHash, LxmfHash, Nat, Text, Nat, Text],
+    [LxmfHash, LxmfHash, Nat, Text, Nat, Nat, Text],
     [HtlcId],
     []
   ),
   "openChannel": Func(
-    [LxmfHash, LxmfHash, Nat, Text],
+    [LxmfHash, LxmfHash, Nat, Nat, Text],
     [ChannelId],
     []
   ),
@@ -32109,9 +32115,10 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "__htlcs": IDL2.Func([], [IDL2.Reserved], ["query"]),
     "__nextChannelId": IDL2.Func([], [IDL2.Reserved], ["query"]),
     "__nextHtlcId": IDL2.Func([], [IDL2.Reserved], ["query"]),
+    "__nonces": IDL2.Func([], [IDL2.Reserved], ["query"]),
     "__publicKeys": IDL2.Func([], [IDL2.Reserved], ["query"]),
     "closeChannelCooperative": IDL2.Func(
-      [ChannelId2, IDL2.Nat, IDL2.Nat, IDL2.Text, IDL2.Text],
+      [ChannelId2, IDL2.Nat, IDL2.Nat, IDL2.Nat, IDL2.Nat, IDL2.Text, IDL2.Text],
       [],
       []
     ),
@@ -32119,12 +32126,17 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "getBalance": IDL2.Func([LxmfHash2], [IDL2.Nat], ["query"]),
     "getChannel": IDL2.Func([ChannelId2], [IDL2.Opt(ChannelRecord2)], ["query"]),
     "getHTLC": IDL2.Func([HtlcId2], [IDL2.Opt(HtlcRecord2)], ["query"]),
+    "getNonce": IDL2.Func([LxmfHash2], [IDL2.Nat], ["query"]),
     "getRegisteredPublicKey": IDL2.Func(
       [LxmfHash2],
       [IDL2.Opt(IDL2.Text)],
       ["query"]
     ),
-    "joinChannel": IDL2.Func([ChannelId2, LxmfHash2, IDL2.Nat, IDL2.Text], [], []),
+    "joinChannel": IDL2.Func(
+      [ChannelId2, LxmfHash2, IDL2.Nat, IDL2.Nat, IDL2.Text],
+      [],
+      []
+    ),
     "listChannelsForAddress": IDL2.Func(
       [LxmfHash2],
       [IDL2.Vec(ChannelRecord2)],
@@ -32136,12 +32148,12 @@ const idlFactory = ({ IDL: IDL2 }) => {
       ["query"]
     ),
     "lockHTLC": IDL2.Func(
-      [LxmfHash2, LxmfHash2, IDL2.Nat, IDL2.Text, IDL2.Nat, IDL2.Text],
+      [LxmfHash2, LxmfHash2, IDL2.Nat, IDL2.Text, IDL2.Nat, IDL2.Nat, IDL2.Text],
       [HtlcId2],
       []
     ),
     "openChannel": IDL2.Func(
-      [LxmfHash2, LxmfHash2, IDL2.Nat, IDL2.Text],
+      [LxmfHash2, LxmfHash2, IDL2.Nat, IDL2.Nat, IDL2.Text],
       [ChannelId2],
       []
     ),
@@ -32260,6 +32272,20 @@ class Backend {
       return result;
     }
   }
+  async __nonces() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.__nonces();
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.__nonces();
+      return result;
+    }
+  }
   async __publicKeys() {
     if (this.processError) {
       try {
@@ -32274,17 +32300,17 @@ class Backend {
       return result;
     }
   }
-  async closeChannelCooperative(arg0, arg1, arg2, arg3, arg4) {
+  async closeChannelCooperative(arg0, arg1, arg2, arg3, arg4, arg5, arg6) {
     if (this.processError) {
       try {
-        const result = await this.actor.closeChannelCooperative(arg0, arg1, arg2, arg3, arg4);
+        const result = await this.actor.closeChannelCooperative(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
         return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.closeChannelCooperative(arg0, arg1, arg2, arg3, arg4);
+      const result = await this.actor.closeChannelCooperative(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
       return result;
     }
   }
@@ -32344,6 +32370,20 @@ class Backend {
       return from_candid_opt_n7(this._uploadFile, this._downloadFile, result);
     }
   }
+  async getNonce(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getNonce(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getNonce(arg0);
+      return result;
+    }
+  }
   async getRegisteredPublicKey(arg0) {
     if (this.processError) {
       try {
@@ -32358,17 +32398,17 @@ class Backend {
       return from_candid_opt_n12(this._uploadFile, this._downloadFile, result);
     }
   }
-  async joinChannel(arg0, arg1, arg2, arg3) {
+  async joinChannel(arg0, arg1, arg2, arg3, arg4) {
     if (this.processError) {
       try {
-        const result = await this.actor.joinChannel(arg0, arg1, arg2, arg3);
+        const result = await this.actor.joinChannel(arg0, arg1, arg2, arg3, arg4);
         return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.joinChannel(arg0, arg1, arg2, arg3);
+      const result = await this.actor.joinChannel(arg0, arg1, arg2, arg3, arg4);
       return result;
     }
   }
@@ -32400,31 +32440,31 @@ class Backend {
       return from_candid_vec_n14(this._uploadFile, this._downloadFile, result);
     }
   }
-  async lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5) {
+  async lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5, arg6) {
     if (this.processError) {
       try {
-        const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5);
+        const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
         return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5);
+      const result = await this.actor.lockHTLC(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
       return result;
     }
   }
-  async openChannel(arg0, arg1, arg2, arg3) {
+  async openChannel(arg0, arg1, arg2, arg3, arg4) {
     if (this.processError) {
       try {
-        const result = await this.actor.openChannel(arg0, arg1, arg2, arg3);
+        const result = await this.actor.openChannel(arg0, arg1, arg2, arg3, arg4);
         return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.openChannel(arg0, arg1, arg2, arg3);
+      const result = await this.actor.openChannel(arg0, arg1, arg2, arg3, arg4);
       return result;
     }
   }
@@ -35943,6 +35983,18 @@ function useDeposit() {
     }
   });
 }
+function useGetNonce(lxmfHash) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery({
+    queryKey: ["nonce", lxmfHash],
+    queryFn: async () => {
+      if (!actor) return 0n;
+      return actor.getNonce(lxmfHash);
+    },
+    enabled: !!actor && !isFetching && lxmfHash.length > 0,
+    refetchInterval: 5e3
+  });
+}
 function useLockHTLC() {
   const { actor } = useActor(createActor);
   const queryClient2 = useQueryClient();
@@ -35955,6 +36007,7 @@ function useLockHTLC() {
         params.amount,
         params.paymentHash,
         params.expirySeconds,
+        params.nonce,
         params.signature
       );
     },
@@ -35967,6 +36020,9 @@ function useLockHTLC() {
       });
       queryClient2.invalidateQueries({
         queryKey: ["balance", variables.senderLxmfHash]
+      });
+      queryClient2.invalidateQueries({
+        queryKey: ["nonce", variables.senderLxmfHash]
       });
       queryClient2.invalidateQueries({ queryKey: ["eventLog"] });
       ue.success("HTLC locked successfully");
@@ -36080,6 +36136,18 @@ function useListChannels(lxmfHash) {
     refetchInterval: 5e3
   });
 }
+function useGetChannel(channelId) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery({
+    queryKey: ["channel", channelId],
+    queryFn: async () => {
+      if (!actor) return null;
+      return actor.getChannel(channelId);
+    },
+    enabled: !!actor && !isFetching && channelId.length > 0,
+    refetchInterval: 5e3
+  });
+}
 function useOpenChannel() {
   const { actor } = useActor(createActor);
   const queryClient2 = useQueryClient();
@@ -36090,6 +36158,7 @@ function useOpenChannel() {
         params.partyA,
         params.partyB,
         params.amountA,
+        params.nonce,
         params.signature
       );
     },
@@ -36102,6 +36171,9 @@ function useOpenChannel() {
       });
       queryClient2.invalidateQueries({
         queryKey: ["balance", variables.partyA]
+      });
+      queryClient2.invalidateQueries({
+        queryKey: ["nonce", variables.partyA]
       });
       queryClient2.invalidateQueries({ queryKey: ["eventLog"] });
       ue.success("Channel opened successfully");
@@ -36123,6 +36195,7 @@ function useJoinChannel() {
         params.channelId,
         params.partyB,
         params.amountB,
+        params.nonce,
         params.signature
       );
     },
@@ -36132,6 +36205,9 @@ function useJoinChannel() {
       });
       queryClient2.invalidateQueries({
         queryKey: ["balance", variables.partyB]
+      });
+      queryClient2.invalidateQueries({
+        queryKey: ["nonce", variables.partyB]
       });
       queryClient2.invalidateQueries({ queryKey: ["eventLog"] });
       ue.success("Channel joined successfully");
@@ -36153,6 +36229,8 @@ function useCloseChannelCooperative() {
         params.channelId,
         params.finalBalanceA,
         params.finalBalanceB,
+        params.nonceA,
+        params.nonceB,
         params.sigA,
         params.sigB
       );
@@ -36160,6 +36238,7 @@ function useCloseChannelCooperative() {
     onSuccess: () => {
       queryClient2.invalidateQueries({ queryKey: ["channels"] });
       queryClient2.invalidateQueries({ queryKey: ["balance"] });
+      queryClient2.invalidateQueries({ queryKey: ["nonce"] });
       queryClient2.invalidateQueries({ queryKey: ["eventLog"] });
       ue.success("Channel closed cooperatively");
     },
@@ -36210,6 +36289,7 @@ function Dashboard() {
   const { data: balance, isLoading: balanceLoading } = useGetBalance(lxmfHash);
   const { data: htlcs, isLoading: htlcsLoading } = useListHTLCs(lxmfHash);
   const { data: channels, isLoading: channelsLoading } = useListChannels(lxmfHash);
+  const { data: nonce, isLoading: nonceLoading } = useGetNonce(lxmfHash);
   const { data: events2, isLoading: eventsLoading } = useEventLog();
   const depositMutation = useDeposit();
   const lockMutation = useLockHTLC();
@@ -36224,24 +36304,29 @@ function Dashboard() {
     amount: "",
     paymentHash: "",
     expiry: "300",
+    nonce: "",
     signature: ""
   });
   const [openChannelForm, setOpenChannelForm] = reactExports.useState({
     partyA: "",
     partyB: "",
     amountA: "",
+    nonce: "",
     signature: ""
   });
   const [joinChannelForm, setJoinChannelForm] = reactExports.useState({
     channelId: "",
     partyB: "",
     amountB: "",
+    nonce: "",
     signature: ""
   });
   const [closeChannelForm, setCloseChannelForm] = reactExports.useState({
     channelId: "",
     finalBalanceA: "",
     finalBalanceB: "",
+    nonceA: "",
+    nonceB: "",
     sigA: "",
     sigB: ""
   });
@@ -36251,21 +36336,39 @@ function Dashboard() {
   });
   const { data: registeredPublicKey, isLoading: publicKeyLoading } = useGetRegisteredPublicKey(lxmfHash);
   const registerPublicKeyMutation = useRegisterPublicKey();
+  const { data: closeChannelDetails } = useGetChannel(
+    closeChannelForm.channelId || ""
+  );
+  const { data: nonceA } = useGetNonce((closeChannelDetails == null ? void 0 : closeChannelDetails.partyA) || "");
+  const { data: nonceB } = useGetNonce((closeChannelDetails == null ? void 0 : closeChannelDetails.partyB) || "");
   const handleDeposit = () => {
     if (!lxmfHash || !depositAmount) return;
     depositMutation.mutate({ lxmfHash, amount: BigInt(depositAmount) });
   };
   const handleLock = () => {
-    if (!lockForm.sender || !lockForm.receiver || !lockForm.amount || !lockForm.paymentHash || !lockForm.signature)
+    if (!lockForm.sender || !lockForm.receiver || !lockForm.amount || !lockForm.paymentHash || !lockForm.nonce || !lockForm.signature)
       return;
-    lockMutation.mutate({
-      senderLxmfHash: lockForm.sender,
-      receiverLxmfHash: lockForm.receiver,
-      amount: BigInt(lockForm.amount),
-      paymentHash: lockForm.paymentHash,
-      expirySeconds: BigInt(lockForm.expiry),
-      signature: lockForm.signature
-    });
+    lockMutation.mutate(
+      {
+        senderLxmfHash: lockForm.sender,
+        receiverLxmfHash: lockForm.receiver,
+        amount: BigInt(lockForm.amount),
+        paymentHash: lockForm.paymentHash,
+        expirySeconds: BigInt(lockForm.expiry),
+        nonce: BigInt(lockForm.nonce),
+        signature: lockForm.signature
+      },
+      {
+        onError: (error) => {
+          const msg = error instanceof Error ? error.message : "Unknown error";
+          if (msg.includes("nonce")) {
+            ue.error(
+              `Nonce mismatch: ${msg}. Current nonce for ${lockForm.sender} is ${nonce ?? 0}. Please re-sign with the correct nonce and resubmit.`
+            );
+          }
+        }
+      }
+    );
   };
   const handleRegisterPublicKey = () => {
     if (!publicKeyForm.lxmfHash || !publicKeyForm.publicKeyHex) return;
@@ -36287,35 +36390,75 @@ function Dashboard() {
     refundMutation.mutate({ htlcId, lxmfHash });
   };
   const handleOpenChannel = () => {
-    if (!openChannelForm.partyA || !openChannelForm.partyB || !openChannelForm.amountA || !openChannelForm.signature)
+    if (!openChannelForm.partyA || !openChannelForm.partyB || !openChannelForm.amountA || !openChannelForm.nonce || !openChannelForm.signature)
       return;
-    openChannelMutation.mutate({
-      partyA: openChannelForm.partyA,
-      partyB: openChannelForm.partyB,
-      amountA: BigInt(openChannelForm.amountA),
-      signature: openChannelForm.signature
-    });
+    openChannelMutation.mutate(
+      {
+        partyA: openChannelForm.partyA,
+        partyB: openChannelForm.partyB,
+        amountA: BigInt(openChannelForm.amountA),
+        nonce: BigInt(openChannelForm.nonce),
+        signature: openChannelForm.signature
+      },
+      {
+        onError: (error) => {
+          const msg = error instanceof Error ? error.message : "Unknown error";
+          if (msg.includes("nonce")) {
+            ue.error(
+              `Nonce mismatch: ${msg}. Current nonce for ${openChannelForm.partyA} is ${nonce ?? 0}. Please re-sign with the correct nonce and resubmit.`
+            );
+          }
+        }
+      }
+    );
   };
   const handleJoinChannel = () => {
-    if (!joinChannelForm.channelId || !joinChannelForm.partyB || !joinChannelForm.signature)
+    if (!joinChannelForm.channelId || !joinChannelForm.partyB || !joinChannelForm.nonce || !joinChannelForm.signature)
       return;
-    joinChannelMutation.mutate({
-      channelId: joinChannelForm.channelId,
-      partyB: joinChannelForm.partyB,
-      amountB: BigInt(joinChannelForm.amountB || "0"),
-      signature: joinChannelForm.signature
-    });
+    joinChannelMutation.mutate(
+      {
+        channelId: joinChannelForm.channelId,
+        partyB: joinChannelForm.partyB,
+        amountB: BigInt(joinChannelForm.amountB || "0"),
+        nonce: BigInt(joinChannelForm.nonce),
+        signature: joinChannelForm.signature
+      },
+      {
+        onError: (error) => {
+          const msg = error instanceof Error ? error.message : "Unknown error";
+          if (msg.includes("nonce")) {
+            ue.error(
+              `Nonce mismatch: ${msg}. Current nonce for ${joinChannelForm.partyB} is ${nonce ?? 0}. Please re-sign with the correct nonce and resubmit.`
+            );
+          }
+        }
+      }
+    );
   };
   const handleCloseChannel = () => {
-    if (!closeChannelForm.channelId || !closeChannelForm.finalBalanceA || !closeChannelForm.finalBalanceB || !closeChannelForm.sigA || !closeChannelForm.sigB)
+    if (!closeChannelForm.channelId || !closeChannelForm.finalBalanceA || !closeChannelForm.finalBalanceB || !closeChannelForm.nonceA || !closeChannelForm.nonceB || !closeChannelForm.sigA || !closeChannelForm.sigB)
       return;
-    closeChannelMutation.mutate({
-      channelId: closeChannelForm.channelId,
-      finalBalanceA: BigInt(closeChannelForm.finalBalanceA),
-      finalBalanceB: BigInt(closeChannelForm.finalBalanceB),
-      sigA: closeChannelForm.sigA,
-      sigB: closeChannelForm.sigB
-    });
+    closeChannelMutation.mutate(
+      {
+        channelId: closeChannelForm.channelId,
+        finalBalanceA: BigInt(closeChannelForm.finalBalanceA),
+        finalBalanceB: BigInt(closeChannelForm.finalBalanceB),
+        nonceA: BigInt(closeChannelForm.nonceA),
+        nonceB: BigInt(closeChannelForm.nonceB),
+        sigA: closeChannelForm.sigA,
+        sigB: closeChannelForm.sigB
+      },
+      {
+        onError: (error) => {
+          const msg = error instanceof Error ? error.message : "Unknown error";
+          if (msg.includes("nonce")) {
+            ue.error(
+              `Nonce mismatch: ${msg}. Current nonce for Party A is ${nonceA ?? 0}, for Party B is ${nonceB ?? 0}. Please re-sign with the correct nonces and resubmit.`
+            );
+          }
+        }
+      }
+    );
   };
   function channelStatusBadge(status) {
     switch (status) {
@@ -36430,12 +36573,12 @@ function Dashboard() {
         /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "bg-card border-border", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader, { className: "pb-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs(CardDescription, { className: "flex items-center gap-2 text-muted-foreground", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Coins, { className: "h-4 w-4" }),
-              "Total HTLC Volume"
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Hash2, { className: "h-4 w-4" }),
+              "Current Nonce"
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "text-3xl font-display", children: htlcsLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-9 w-24" }) : `${formatBalance((htlcs == null ? void 0 : htlcs.reduce((sum, h2) => sum + h2.amount, 0n)) ?? 0n)}` })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "text-3xl font-display", children: nonceLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-9 w-16" }) : `${formatBalance(nonce ?? 0n)}` })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(CardContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "All time locked value" }) })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CardContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Next nonce for signing" }) })
         ] })
       ] })
     ] }),
@@ -36576,21 +36719,37 @@ function Dashboard() {
             }
           )
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "signature", children: "Signature (hex)" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Input,
-            {
-              id: "signature",
-              "data-ocid": "htlc.signature_input",
-              placeholder: "Ed25519 signature over the message below",
-              value: lockForm.signature,
-              onChange: (e) => setLockForm((f2) => ({ ...f2, signature: e.target.value })),
-              className: "font-mono"
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Sign the exact pipe-separated message below with your Ed25519 private key offline. The frontend does not generate or store private keys." })
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-4 sm:grid-cols-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "nonce", children: "Nonce" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                id: "nonce",
+                "data-ocid": "htlc.nonce_input",
+                type: "number",
+                placeholder: "Current nonce",
+                value: lockForm.nonce,
+                onChange: (e) => setLockForm((f2) => ({ ...f2, nonce: e.target.value }))
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "signature", children: "Signature (hex)" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                id: "signature",
+                "data-ocid": "htlc.signature_input",
+                placeholder: "Ed25519 signature over the message below",
+                value: lockForm.signature,
+                onChange: (e) => setLockForm((f2) => ({ ...f2, signature: e.target.value })),
+                className: "font-mono"
+              }
+            )
+          ] })
         ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Sign the exact pipe-separated message below with your Ed25519 private key offline. The frontend does not generate or store private keys." }),
         lockForm.sender && lockForm.receiver && lockForm.amount && lockForm.paymentHash && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-md border bg-muted/30 p-3 space-y-1", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-medium text-foreground", children: "Message to sign:" }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("code", { className: "block text-xs font-mono text-muted-foreground break-all", children: [
@@ -36602,7 +36761,9 @@ function Dashboard() {
             "|",
             lockForm.paymentHash,
             "|",
-            lockForm.expiry
+            lockForm.expiry,
+            "|",
+            lockForm.nonce || "0"
           ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -36688,6 +36849,23 @@ function Dashboard() {
               )
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "open-nonce", children: "Nonce" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "open-nonce",
+                  "data-ocid": "channel.open_nonce_input",
+                  type: "number",
+                  placeholder: "Current nonce",
+                  value: openChannelForm.nonce,
+                  onChange: (e) => setOpenChannelForm((f2) => ({
+                    ...f2,
+                    nonce: e.target.value
+                  }))
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "open-signature", children: "Signature (hex)" }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 Input,
@@ -36712,7 +36890,9 @@ function Dashboard() {
               "|",
               openChannelForm.partyB,
               "|",
-              openChannelForm.amountA
+              openChannelForm.amountA,
+              "|",
+              openChannelForm.nonce || "0"
             ] })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -36792,6 +36972,23 @@ function Dashboard() {
               )
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "join-nonce", children: "Nonce" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "join-nonce",
+                  "data-ocid": "channel.join_nonce_input",
+                  type: "number",
+                  placeholder: "Current nonce",
+                  value: joinChannelForm.nonce,
+                  onChange: (e) => setJoinChannelForm((f2) => ({
+                    ...f2,
+                    nonce: e.target.value
+                  }))
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "join-signature", children: "Signature (hex)" }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 Input,
@@ -36816,7 +37013,9 @@ function Dashboard() {
               "|",
               joinChannelForm.partyB,
               "|",
-              joinChannelForm.amountB || "0"
+              joinChannelForm.amountB || "0",
+              "|",
+              joinChannelForm.nonce || "0"
             ] })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -36898,6 +37097,56 @@ function Dashboard() {
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-4 sm:grid-cols-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "close-nonce-a", children: "Nonce A (Party A)" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "close-nonce-a",
+                  "data-ocid": "channel.close_nonce_a_input",
+                  type: "number",
+                  placeholder: "Party A current nonce",
+                  value: closeChannelForm.nonceA,
+                  onChange: (e) => setCloseChannelForm((f2) => ({
+                    ...f2,
+                    nonceA: e.target.value
+                  }))
+                }
+              ),
+              (closeChannelDetails == null ? void 0 : closeChannelDetails.partyA) && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground", children: [
+                "Current nonce for",
+                " ",
+                truncateHash(closeChannelDetails.partyA, 6),
+                ": ",
+                nonceA ?? 0
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "close-nonce-b", children: "Nonce B (Party B)" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "close-nonce-b",
+                  "data-ocid": "channel.close_nonce_b_input",
+                  type: "number",
+                  placeholder: "Party B current nonce",
+                  value: closeChannelForm.nonceB,
+                  onChange: (e) => setCloseChannelForm((f2) => ({
+                    ...f2,
+                    nonceB: e.target.value
+                  }))
+                }
+              ),
+              (closeChannelDetails == null ? void 0 : closeChannelDetails.partyB) && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground", children: [
+                "Current nonce for",
+                " ",
+                truncateHash(closeChannelDetails.partyB, 6),
+                ": ",
+                nonceB ?? 0
+              ] })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-4 sm:grid-cols-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "close-sig-a", children: "Signature A (hex)" }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 Input,
@@ -36933,7 +37182,11 @@ function Dashboard() {
               "|",
               closeChannelForm.finalBalanceA,
               "|",
-              closeChannelForm.finalBalanceB
+              closeChannelForm.finalBalanceB,
+              "|",
+              closeChannelForm.nonceA || "0",
+              "|",
+              closeChannelForm.nonceB || "0"
             ] })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
